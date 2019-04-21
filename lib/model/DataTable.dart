@@ -41,6 +41,9 @@ class _DataTableDemoState extends State<DataTableDemo> {
                   label: Text('中文名'),
                 ),
                 DataColumn(
+                  label: Text('Icon'),
+                ),
+                DataColumn(
                   label: Text('英文名'),
                 ),
                 DataColumn(
@@ -54,6 +57,7 @@ class _DataTableDemoState extends State<DataTableDemo> {
                 return DataRow(cells: [
                   DataCell(Text(post['全国编号'])),
                   DataCell(Text(post['中文名'])),
+                  DataCell(Image.asset('lib/assets/PokeIcon/${int.parse(post['全国编号'])}.png')),
                   DataCell(Text(post['英文名'])),
                   DataCell(Text(post['日文名'])),
                   DataCell(Text(post['副属性'] == null
