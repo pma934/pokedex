@@ -10,7 +10,6 @@ class DataTableDemo extends StatefulWidget {
 class _DataTableDemoState extends State<DataTableDemo> {
   int _sortColumnIndex;
   bool _sortAscending = true;
-
   // PostDataSource _postsDataSource; 
 
   // @override
@@ -21,6 +20,7 @@ class _DataTableDemoState extends State<DataTableDemo> {
 
   @override
   Widget build(BuildContext context) {
+    //print(widget);
     PostDataSource _postsDataSource = PostDataSource(widget.posts);
     return Container(
         padding: EdgeInsets.all(16.0),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:async';
-import 'package:pokedex/model/DataTable.dart';
-import 'package:pokedex/model/ReadJson.dart';
+import 'package:pokedex/model/ItemList.dart';
+import 'package:pokedex/model/PokeList.dart';
+import 'package:pokedex/model/SkillList.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,62 +19,81 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+//主页面
+class HomePage extends StatefulWidget {
   final String title;
   HomePage({Key key, @required this.title}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
-        body: HomeBody(),
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text('Home')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.business), title: Text('Business')),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.school), title: Text('School')),
-          ],
-        ),
-        drawer: Drawer());
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class HomeBody extends StatelessWidget {
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  final _widgetOptions = [
+    PokeList(),
+    SkillList(),
+    ItemList(),
+  ];
+  void onChanged(index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: readJson(context, 'lib/assets/Pokemon/Kanto.json'),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.data == null) {
-          return Center(
-            child: Text('Loading...'),
-          );
-        }
-        return DataTableDemo(posts: snapshot.data);
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: _widgetOptions[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBarDemo(
+        selectedIndex: _selectedIndex,
+        callBack: (index) => onChanged(index),
+      ), //callback实际上是父亲向子传了个函数
     );
   }
 }
 
-class Pic extends StatelessWidget {
+//主页面底部导航
+class BottomNavigationBarDemo extends StatefulWidget {
+  int selectedIndex;
+  final callBack;
+  BottomNavigationBarDemo({Key key, this.selectedIndex, this.callBack})
+      : super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return _BottomNavigationBarDemoState();
+  }
+}
+
+class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo> {
+  int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.selectedIndex;
+  }
+
+  void _onTapHandler(int index) {
+    setState(() {
+      _currentIndex = index;
+      widget.callBack(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: 200,
-      // height: 200,
-      decoration: BoxDecoration(
-          // image: DecorationImage(
-          //   image: AssetImage('lib/assets/Pokemon/PokemonIcon.png'),
-          // ),
-          color: Colors.blueAccent),
-      child: Image.asset(
-        'lib/assets/PokeIcon/1.png',
-        fit: BoxFit.none,
-      ),
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: _onTapHandler,
+      type: BottomNavigationBarType.fixed,
+      fixedColor: Colors.blueAccent,
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.pets), title: Text('精灵')),
+        BottomNavigationBarItem(icon: Icon(Icons.polymer), title: Text('技能')),
+        BottomNavigationBarItem(icon: Icon(Icons.work), title: Text('道具')),
+      ],
     );
   }
 }
