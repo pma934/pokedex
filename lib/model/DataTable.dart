@@ -10,13 +10,26 @@ class DataTableDemo extends StatefulWidget {
 class _DataTableDemoState extends State<DataTableDemo> {
   int _sortColumnIndex;
   bool _sortAscending = true;
+
+  // PostDataSource _postsDataSource; 
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _postsDataSource = PostDataSource(widget.posts);
+  // }
+
   @override
   Widget build(BuildContext context) {
+    PostDataSource _postsDataSource = PostDataSource(widget.posts);
     return Container(
         padding: EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
-            DataTable(
+            PaginatedDataTable(
+              header: Text('宝可梦列表'),
+              rowsPerPage: 8,
+              source: _postsDataSource,
               sortColumnIndex: _sortColumnIndex,
               sortAscending: _sortAscending,
               columns: [
@@ -53,20 +66,43 @@ class _DataTableDemoState extends State<DataTableDemo> {
                   label: Text('属性'),
                 ),
               ],
-              rows: widget.posts.map<DataRow>((post) {
-                return DataRow(cells: [
-                  DataCell(Text(post['全国编号'])),
-                  DataCell(Text(post['中文名'])),
-                  DataCell(Image.asset('lib/assets/PokeIcon/${int.parse(post['全国编号'])}.png')),
-                  DataCell(Text(post['英文名'])),
-                  DataCell(Text(post['日文名'])),
-                  DataCell(Text(post['副属性'] == null
-                      ? post['主属性']
-                      : post['主属性'] + '+' + post['副属性'])),
-                ]);
-              }).toList(),
             )
           ],
         ));
+  }
+}
+
+class PostDataSource extends DataTableSource {
+  final List posts;
+
+  PostDataSource(
+    this.posts,
+  );
+
+  int _selectedCount = 0;
+
+  @override
+  int get rowCount => posts.length;
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get selectedRowCount => _selectedCount;
+
+  @override
+  DataRow getRow(int index) {
+    final post = posts[index];
+
+    return DataRow.byIndex(index: index, cells: <DataCell>[
+      DataCell(Text(post['全国编号'])),
+      DataCell(Text(post['中文名'])),
+      DataCell(
+          Image.asset('lib/assets/PokeIcon/${int.parse(post['全国编号'])}.png')),
+      DataCell(Text(post['英文名'])),
+      DataCell(Text(post['日文名'])),
+      DataCell(Text(
+          post['副属性'] == null ? post['主属性'] : post['主属性'] + '+' + post['副属性'])),
+    ]);
   }
 }
