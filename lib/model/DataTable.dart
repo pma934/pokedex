@@ -10,28 +10,36 @@ class DataTableDemo extends StatefulWidget {
 class _DataTableDemoState extends State<DataTableDemo> {
   int _sortColumnIndex;
   bool _sortAscending = true;
-  // PostDataSource _postsDataSource; 
+  PostDataSource _postsDataSource; 
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _postsDataSource = PostDataSource(widget.posts);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _postsDataSource = PostDataSource(widget.posts);
+  }
+
+  onchange(value){
+    print(value);
+  }
 
   @override
   Widget build(BuildContext context) {
-    //print(widget);
-    PostDataSource _postsDataSource = PostDataSource(widget.posts);
     return Container(
         padding: EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
             PaginatedDataTable(
+              actions: <Widget>[/*跟header 在一条线的antion*/
+                IconButton(icon: Icon(Icons.add), onPressed: (){print('a');}),
+                IconButton(icon: Icon(Icons.add), onPressed: (){print('b');}),
+                IconButton(icon: Icon(Icons.add), onPressed: (){print('c');}),
+              ],
               header: Text('宝可梦列表'),
               rowsPerPage: 8,
               source: _postsDataSource,
               sortColumnIndex: _sortColumnIndex,
               sortAscending: _sortAscending,
+              onPageChanged:(value)=>onchange(value),
               columns: [
                 DataColumn(
                     label: Text('全国编号'),
