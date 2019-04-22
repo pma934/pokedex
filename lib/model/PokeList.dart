@@ -15,7 +15,14 @@ class _PokeListState extends State<PokeList> {
       future: readJson(context, 'lib/assets/Pokemon/Kanto.json'),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
-          return Center(
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/assets/bg-1.sh.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            alignment: Alignment(0, 0),
             child: Text('Loading...'),
           );
         }
@@ -73,12 +80,20 @@ class GridViewExtentDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      padding: EdgeInsets.all(10.0),
-      crossAxisCount: 3,
-      crossAxisSpacing: 10.0,
-      mainAxisSpacing: 10.0,
-      children: _buildTiles(posts.length, context),
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('lib/assets/bg-1.md.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: GridView.count(
+        padding: EdgeInsets.all(10.0),
+        crossAxisCount: 3,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
+        children: _buildTiles(posts.length, context),
+      ),
     );
   }
 }
