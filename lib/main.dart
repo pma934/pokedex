@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        elevation: 10.0,
       ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBarDemo(
