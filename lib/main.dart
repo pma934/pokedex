@@ -7,7 +7,6 @@ import 'package:pokedex/model/fuction/ReadJson.dart';
 
 void main(){
       print('先把数据加载了吧！');
-      readJson(context, 'lib/assets/Pokemon/Kanto.json');
       runApp(MyApp());
     }
 
@@ -64,7 +63,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final _widgetOptions = [
-    GridViewExtentDemo(),
+    PokeList(),
     SkillList(),
     ItemList(),
   ];
@@ -82,7 +81,7 @@ class _HomePageState extends State<HomePage> {
           title: Text(widget.title),
           elevation: 10.0,
         ),
-        preferredSize: Size.fromHeight(30),
+        preferredSize: Size.fromHeight(50),
       ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBarDemo(

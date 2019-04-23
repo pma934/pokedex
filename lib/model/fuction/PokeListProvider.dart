@@ -11,6 +11,6 @@ class PokeListProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) {
-    return null;
+    return true;
   }
 }
