@@ -78,11 +78,8 @@ class PokemonCard extends StatelessWidget {
                     highlightColor: Colors.white.withOpacity(0.1), //点击填充
                     onTap: () {
                       print('${posts[index]['中文名']}');
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              PageViewDemo(currentPage: index),
-                        ),
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>PageViewDemo(currentPage: index,posts:posts)),
+                      //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context){return PageViewDemo(currentPage: index,posts:posts);})
                       );
                     },
                   )),
@@ -94,7 +91,8 @@ class PokemonCard extends StatelessWidget {
 
 class PageViewDemo extends StatelessWidget {
   int currentPage;
-  PageViewDemo({Key key,@required this.currentPage})
+  final List posts;
+  PageViewDemo({Key key,@required this.currentPage,this.posts})
       : super(key: key);
   List<Widget> _buildTiles(posts) {
     return List.generate(posts.length, (int index) {
@@ -139,7 +137,7 @@ class PageViewDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List posts = PokeListProvider.of(context).pokeList;
+    //final List posts = PokeListProvider.of(context).pokeList;
     return PageView(
       // pageSnapping: false,
       // reverse: true,
