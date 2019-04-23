@@ -4,7 +4,7 @@ class PokeListProvider extends InheritedWidget {
   final List pokeList;
   final Widget child;
 
-  PokeListProvider({this.pokeList, this.child}) : super(child: child);
+  PokeListProvider({Key key,this.pokeList, this.child}) : super(key:key,child: child);
 
   static PokeListProvider of(BuildContext context) =>
       context.inheritFromWidgetOfExactType(PokeListProvider);
