@@ -4,8 +4,10 @@ import 'package:pokedex/model/PokeList.dart';
 import 'package:pokedex/model/SkillList.dart';
 import 'package:pokedex/model/fuction/PokeListProvider.dart';
 import 'package:pokedex/model/fuction/ReadJson.dart';
+import 'package:pokedex/model/fuction/posts.dart';
+import 'package:http/http.dart' as http;
 
-void main(){
+void main() {
   print('先把数据加载了吧！');
   runApp(MyApp());
 }
@@ -19,8 +21,46 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoadingPage(),
+      home: Test(), //LoadingPage(),
     );
+  }
+}
+
+class Test extends StatefulWidget {
+  @override
+  _TestState createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  
+
+  @override
+  void initState() {
+    super.initState();
+    ccc();
+    
+  }  
+
+  ccc() async{
+    final response = await DefaultAssetBundle.of(context).loadString('lib/assets/Pokemon/pppp.json');
+    //final response1 = await http.get('https://resources.ninghao.net/demo/posts.json');
+    //PokemonList posts = new PokemonList(response);
+    pppp posts =new pppp(response);
+    print(posts);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('test'),
+        ),
+        body: OutlineButton(
+          child: Text('data'),
+          onPressed: () {
+            print('posts');
+          },
+        ));
   }
 }
 
@@ -34,9 +74,10 @@ class LoadingPage extends StatelessWidget {
         if (snapshot.data == null) {
           return Container(
             decoration: BoxDecoration(
-              color: Color(0xFFFFFFFF),
-              image: DecorationImage(image: AssetImage('lib/assets/Pokemon/PokemonIcon.png'),fit: BoxFit.contain)
-            ),
+                color: Color(0xFFFFFFFF),
+                image: DecorationImage(
+                    image: AssetImage('lib/assets/Pokemon/PokemonIcon.png'),
+                    fit: BoxFit.contain)),
           );
         }
         return PokeListProvider(
