@@ -1,43 +1,12 @@
 //精灵列表
 import 'package:flutter/material.dart';
 import 'package:pokedex/model/fuction/AttrToColor.dart';
+import 'package:pokedex/model/fuction/PokeListProvider.dart';
 import 'package:pokedex/model/fuction/ReadJson.dart';
 
-class PokeList extends StatefulWidget {
-  @override
-  _PokeListState createState() => _PokeListState();
-}
-
-class _PokeListState extends State<PokeList> {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: readJson(context, 'lib/assets/Pokemon/Kanto.json'),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.data == null) {
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/assets/bg-1.sh.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            alignment: Alignment(0, 0),
-            child: Text('Loading...'),
-          );
-        }
-        return GridViewExtentDemo(posts: snapshot.data);
-        //DataTableDemo(posts: snapshot.data);
-      },
-    );
-  }
-}
-
 class GridViewExtentDemo extends StatelessWidget {
-  final List posts;
-  GridViewExtentDemo({Key key, @required this.posts}) : super(key: key);
-  List<Widget> _buildTiles(int length, BuildContext context) {
-    return List.generate(length, (int x) {
+  List<Widget> _buildTiles(List posts, BuildContext context) {
+    return List.generate(posts.length, (int index) {
       return Container(
           decoration: BoxDecoration(
             //border: new Border.all(color: Color(0xff0d47a1), width: 0.5),
@@ -51,8 +20,11 @@ class GridViewExtentDemo extends StatelessWidget {
               // BoxShadow(color: Color(0xFF0000FF))
             ],
             borderRadius: BorderRadius.circular(16.0),
-            gradient: getLinearGradient(posts[x]['主属性'],
-                posts[x]['副属性'] == null ? posts[x]['主属性'] : posts[x]['副属性']),
+            gradient: getLinearGradient(
+                posts[index]['主属性'],
+                posts[index]['副属性'] == null
+                    ? posts[index]['主属性']
+                    : posts[index]['副属性']),
           ),
           alignment: Alignment(0, 0),
           child: Stack(
@@ -60,16 +32,16 @@ class GridViewExtentDemo extends StatelessWidget {
             overflow: Overflow.visible,
             children: <Widget>[
               Column(children: <Widget>[
-                Text('#${posts[x]['全国编号']}',
+                Text('#${posts[index]['全国编号']}',
                     style: TextStyle(
                       fontSize: 16,
                       fontStyle: FontStyle.italic,
                     )),
-                Text('${posts[x]['中文名']}', style: TextStyle(fontSize: 20)),
+                Text('${posts[index]['中文名']}', style: TextStyle(fontSize: 20)),
                 Container(
                   width: 70,
                   child: Image.asset(
-                    'lib/assets/PokeIcon/${int.parse(posts[x]['全国编号'])}.png',
+                    'lib/assets/PokeIcon/${int.parse(posts[index]['全国编号'])}.png',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -81,7 +53,13 @@ class GridViewExtentDemo extends StatelessWidget {
                       splashColor: Colors.white.withOpacity(0.3), // 水墨蔓延
                       highlightColor: Colors.white.withOpacity(0.1), //点击填充
                       onTap: () {
-                        print('${posts[x]['中文名']}');
+                        print('${posts[index]['中文名']}');
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) =>
+                        //         PageViewDemo(posts: posts, currentPage: index),
+                        //   ),
+                        // );
                       },
                     )),
               )
@@ -92,6 +70,7 @@ class GridViewExtentDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List posts = PokeListProvider.of(context).pokeList;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -104,11 +83,75 @@ class GridViewExtentDemo extends StatelessWidget {
         crossAxisCount: 3,
         crossAxisSpacing: 8.0,
         mainAxisSpacing: 8.0,
-        children: _buildTiles(posts.length, context),
+        children: _buildTiles(posts, context),
       ),
     );
   }
 }
+
+class PageViewDemo extends StatelessWidget {
+  List posts;
+  int currentPage;
+  PageViewDemo({Key key, @required this.posts, @required this.currentPage})
+      : super(key: key);
+  List<Widget> _buildTiles() {
+    return List.generate(posts.length, (int index) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('#${posts[index]['全国编号']}    ${posts[index]['中文名']}'),
+        ),
+        body: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(8.0),
+          children: <Widget>[
+            ExpansionPanelList(
+              expansionCallback: (int panelIndex, bool isExpanded) {
+                print(panelIndex);
+              },
+              children: [
+                ExpansionPanel(
+                  isExpanded: true,
+                  body: Container(
+                    padding: EdgeInsets.all(4.0),
+                    width: double.infinity,
+                    child: Text('Content for Panel C.'),
+                  ),
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return Container(
+                      padding: EdgeInsets.only(
+                          left: 16.0, top: 0.0, right: 0.0, bottom: 0.0),
+                      child: Text(
+                        '基本信息',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      // pageSnapping: false,
+      // reverse: true,
+      // scrollDirection: Axis.vertical,
+      onPageChanged: (currentPage) => debugPrint('Page:$currentPage'),
+      controller: PageController(
+        initialPage: currentPage,
+        keepPage: false,
+        //viewportFraction: 0.85,
+      ),
+      children: _buildTiles(),
+    );
+  }
+}
+
 
 
 

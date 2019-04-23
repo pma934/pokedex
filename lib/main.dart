@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/model/ItemList.dart';
 import 'package:pokedex/model/PokeList.dart';
 import 'package:pokedex/model/SkillList.dart';
+import 'package:pokedex/model/fuction/PokeListProvider.dart';
+import 'package:pokedex/model/fuction/ReadJson.dart';
 
-void main() => runApp(MyApp());
+void main(){
+      print('先把数据加载了吧！');
+      readJson(context, 'lib/assets/Pokemon/Kanto.json');
+      runApp(MyApp());
+    }
 
 class MyApp extends StatelessWidget {
   @override
@@ -14,7 +20,35 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'PokeDex'),
+      home: LoadingPage(),
+    );
+  }
+}
+
+//加载所有json数据，loading...页
+class LoadingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: readJson(context, 'lib/assets/Pokemon/Kanto.json'),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.data == null) {
+          return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/assets/bg-1.sh.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            alignment: Alignment(0, 0),
+            child: Text('Loading...'),
+          );
+        }
+        return PokeListProvider(
+          pokeList: snapshot.data,
+          child: HomePage(title: 'Pokedex'),
+        );
+      },
     );
   }
 }
@@ -30,7 +64,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final _widgetOptions = [
-    PokeList(),
+    GridViewExtentDemo(),
     SkillList(),
     ItemList(),
   ];
@@ -43,9 +77,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        elevation: 10.0,
+      appBar: PreferredSize(
+        child: AppBar(
+          title: Text(widget.title),
+          elevation: 10.0,
+        ),
+        preferredSize: Size.fromHeight(30),
       ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBarDemo(
