@@ -45,7 +45,7 @@ flutter:
   assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
-    - lib/assets/Pokemon/Kanto.json
+    - lib/assets/Pokemon/
     - lib/assets/PokeIcon/
     - lib/assets/bg-1.md.png
     - lib/assets/bg-1.sh.png

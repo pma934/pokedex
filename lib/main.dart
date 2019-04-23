@@ -6,9 +6,9 @@ import 'package:pokedex/model/fuction/PokeListProvider.dart';
 import 'package:pokedex/model/fuction/ReadJson.dart';
 
 void main(){
-      print('先把数据加载了吧！');
-      runApp(MyApp());
-    }
+  print('先把数据加载了吧！');
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -34,13 +34,9 @@ class LoadingPage extends StatelessWidget {
         if (snapshot.data == null) {
           return Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/assets/bg-1.sh.png'),
-                fit: BoxFit.cover,
-              ),
+              color: Color(0xFFFFFFFF),
+              image: DecorationImage(image: AssetImage('lib/assets/Pokemon/PokemonIcon.png'),fit: BoxFit.contain)
             ),
-            alignment: Alignment(0, 0),
-            child: Text('Loading...'),
           );
         }
         return PokeListProvider(
