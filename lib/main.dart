@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/model/ItemList.dart';
 import 'package:pokedex/model/PokeList.dart';
 import 'package:pokedex/model/SkillList.dart';
+import 'package:pokedex/model/data/testdata.dart';
 import 'package:pokedex/model/fuction/PokeListProvider.dart';
 import 'package:pokedex/model/fuction/ReadJson.dart';
 import 'package:pokedex/model/fuction/posts.dart';
 import 'package:http/http.dart' as http;
+
 
 void main() {
   print('先把数据加载了吧！');
@@ -58,7 +60,7 @@ class _TestState extends State<Test> {
         body: OutlineButton(
           child: Text('data'),
           onPressed: () {
-            print('posts');
+            print(testdata.length);
           },
         ));
   }
