@@ -12,9 +12,9 @@
 
 <body>
     <button onclick="getdata1(1)">获取全国Id、特性、身高、体重、属性、种族值、努力值、英文名、</button>
-    <button onclick="getdata2(1)">获取...</button>
+    <button onclick="getdata2(1)">获取种族、捕获率、初始亲密度、颜色、蛋组、进化表、世代、性别比、性别差异、形态切换、形式描述、孵化步数、幼年宝可梦、中文名、日文名</button>
     <br>
-    <button onclick="getdataX(1)">获取XXX</button>
+    <button onclick="getdataX(10001)">获取XXX</button>
     <br>
     <button onclick="save()">save</button>
 
@@ -44,7 +44,8 @@
 </body>
 <script>
     //https://pokeapi.co/api/v2/evolution-chain/  进化链
-    //https://pokeapi.co/api/v2/ability/ 特性表
+    //https://pokeapi.co/api/v2/ability/ 特性表   10000+之后是信长野望里的特性
+    //'https://pokeapi.co/api/v2/egg-group/' 蛋组
     var 属性对照 = ['一般', '格斗', '飞行', '毒', '地面', '岩石', '虫', '幽灵', '钢', '火', '水', '草', '电', '超能力', '冰', '龙', '恶', '妖精']
     var 蛋组对照 = ['怪兽组', '水一组', '昆虫组', '飞行组', '陆上组', '妖精组', '植物组', '人形组', '水三组', '矿物组', '不定形组', '水二组', '百变怪', '龙组', '未发现组']
     var pokedata = []
@@ -102,7 +103,7 @@
         }).then(() => getdata1(num + 1))
     }
 
-    //获取种族、捕获率、初始亲密度、颜色
+    //获取种族、捕获率、初始亲密度、颜色、蛋组、进化表、世代、性别比、性别差异、形态切换、形式描述、孵化步数、幼年宝可梦、中文名、日文名
     //...没弄
     var getdata2 = (num) => {
         $.ajax({
@@ -160,7 +161,7 @@
 
     var getdataX = (num) => {
         $.ajax({
-            url: 'https://pokeapi.co/api/v2/egg-group/' + num,
+            url: 'https://pokeapi.co/api/v2/ability/' + num,
             type: "GET",
             success: function (res) {
                 return res
