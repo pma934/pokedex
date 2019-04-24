@@ -1,4 +1,4 @@
-List testdata = [
+List pokemonList = [
     {
         "地区编号": "001",
         "全国编号": "001",

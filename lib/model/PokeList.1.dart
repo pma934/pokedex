@@ -4,26 +4,44 @@ import 'package:pokedex/model/PokeDetail.dart';
 import 'package:pokedex/model/data/testdata.dart';
 import 'package:pokedex/model/fuction/AttrToColor.dart';
 
-class PokeList extends StatelessWidget {
+class PokeList1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('lib/assets/bg-1.md.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: GridView.count(
-        padding: EdgeInsets.all(8.0),
-        crossAxisCount: 3,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-        children: List.generate(pokemonList.length, (int index) {
-          return PokemonCard(index: index);
-        }),
-      ),
-    );
+        decoration: BoxDecoration(
+            // image: DecorationImage(
+            //   image: AssetImage('lib/assets/bg-1.md.png'),
+            //   fit: BoxFit.cover,
+            // ),
+            ),
+        child: ListView(
+          children: List.generate(pokemonList.length, (int index) {
+            return ListTile(
+              title: Text('${pokemonList[index]['中文名']}'),
+              leading: Image.asset(
+                'lib/assets/PokeIcon/${int.parse(pokemonList[index]['全国编号'])}.png',
+              ),
+              subtitle:Text('# ${pokemonList[index]['全国编号']}'),
+              onTap: () {
+                print('${pokemonList[index]['中文名']}');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => PokeDetail(currentPage: index)),
+                );
+              },
+            );
+          }),
+        )
+        // GridView.count(
+        //   padding: EdgeInsets.all(8.0),
+        //   crossAxisCount: 3,
+        //   crossAxisSpacing: 8.0,
+        //   mainAxisSpacing: 8.0,
+        //   children: List.generate(pokemonList.length, (int index) {
+        //     return PokemonCard(index: index);
+        //   }),
+        // ),
+        );
   }
 }
 
@@ -76,8 +94,11 @@ class PokemonCard extends StatelessWidget {
                     highlightColor: Colors.white.withOpacity(0.1), //点击填充
                     onTap: () {
                       print('${pokemonList[index]['中文名']}');
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>PokeDetail(currentPage: index)),
-                       );
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PokeDetail(currentPage: index)),
+                      );
                     },
                   )),
             )
@@ -85,4 +106,3 @@ class PokemonCard extends StatelessWidget {
         ));
   }
 }
-
