@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/model/ItemList.dart';
-import 'package:pokedex/model/PokeList.1.dart';
-import 'package:pokedex/model/PokeList.2.dart';
 import 'package:pokedex/model/PokeList.dart';
 import 'package:pokedex/model/SkillList.dart';
 
@@ -35,8 +33,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final _widgetOptions = [
     PokeList(),
-    PokeList1(),
-    PokeList2(),
+    SkillList(),
+    ItemList(),
   ];
   void onChanged(index) {
     setState(() {

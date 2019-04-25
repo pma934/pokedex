@@ -1,7 +1,7 @@
 //精灵列表
 import 'package:flutter/material.dart';
 import 'package:pokedex/model/PokeDetail.dart';
-import 'package:pokedex/model/data/testdata.dart';
+import 'package:pokedex/model/data/pokemonList-simple.dart';
 import 'package:pokedex/model/fuction/AttrToColor.dart';
 
 class PokeList extends StatelessWidget {
@@ -44,10 +44,10 @@ class PokemonCard extends StatelessWidget {
           ],
           borderRadius: BorderRadius.circular(16.0),
           gradient: getLinearGradient(
-              pokemonList[index]['主属性'],
-              pokemonList[index]['副属性'] == null
-                  ? pokemonList[index]['主属性']
-                  : pokemonList[index]['副属性']),
+              pokemonList[index]['属性'][0],
+              pokemonList[index]['属性'][1] == null
+                  ? pokemonList[index]['属性'][0]
+                  : pokemonList[index]['属性'][1]),
         ),
         child: Stack(
           alignment: Alignment.center,
@@ -64,7 +64,7 @@ class PokemonCard extends StatelessWidget {
                 softWrap: false,
               ),
               Image.asset(
-                'lib/assets/PokeIcon/${int.parse(pokemonList[index]['全国编号'])}.png',
+                'lib/assets/PokeIcon/${pokemonList[index]['全国编号']}.png',
                 height: 60,
               ),
             ]),

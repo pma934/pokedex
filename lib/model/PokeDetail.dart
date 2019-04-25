@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:pokedex/model/data/testdata.dart';
+import 'package:pokedex/model/data/pokemonList-simple.dart';
 
 class PokeDetail extends StatelessWidget {
   PokeDetail({Key key, @required this.currentPage}): super(key: key);
