@@ -41,15 +41,18 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        child: AppBar(
-          title: Text(widget.title),
-          elevation: 10.0,
+      appBar: AppBar(
+        title: Container(
+          alignment: Alignment(0, 0),
+          child: Text(
+            widget.title,
+            style: TextStyle(fontSize: 20),
+          ),
         ),
-        preferredSize: Size.fromHeight(50),
       ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBarDemo(
@@ -79,12 +82,14 @@ class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo> {
     super.initState();
     _currentIndex = widget.selectedIndex;
   }
+
   void _onTapHandler(int index) {
     setState(() {
       _currentIndex = index;
       widget.callBack(index);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
