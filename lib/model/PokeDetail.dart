@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/model/data/abilitiesList.dart';
 import 'package:pokedex/model/data/pokemonList-detail.dart';
+import 'package:pokedex/model/fuction/AttrToColor.dart';
 
 class PokeDetail extends StatelessWidget {
   PokeDetail({Key key, @required this.currentPage}) : super(key: key);
@@ -22,6 +24,26 @@ class PokeDetail extends StatelessWidget {
 class PokeItem extends StatelessWidget {
   PokeItem({Key key, this.index}) : super(key: key);
   final int index;
+
+  Widget ablityButton(index, n) {
+    return Expanded(
+      child: Padding(
+        child: pokemonList[index]['特性'][n] == null
+            ? RaisedButton(
+                onPressed: () {},
+              )
+            : RaisedButton(
+                onPressed: () {
+                  print(abilitiesList[pokemonList[index]['特性'][n] - 1]['简介']);
+                },
+                child: Text(
+                    '${abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称']}'),
+              ),
+        padding: EdgeInsets.only(right: 2, left: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,31 +60,130 @@ class PokeItem extends StatelessWidget {
         // shrinkWrap: true,
         padding: const EdgeInsets.all(8.0),
         children: <Widget>[
-           MyCard(
-            child: Row(
-              children: <Widget>[
-                chipImg(8.0, 'lib/assets/bg-1.md.png'),
-                Container(width: 10),//10间隔
-                Column(
-                  crossAxisAlignment:CrossAxisAlignment.start,
-                  children: <Widget>[      
-                    Text('${pokemonList[index]['中文名']}',style: TextStyle(fontSize: 24),textAlign: TextAlign.end,),
-                    Text('${pokemonList[index]['日文名']}·${pokemonList[index]['英文名']}'),
-                    Text('${pokemonList[index]['种族']}'),
-                    Text('${pokemonList[index]['属性'][0]}${pokemonList[index]['属性'][1]??''}'),
-                    Text('初始亲密度:${pokemonList[index]['初始亲密度']}'),
-                    Text('孵化步数:${pokemonList[index]['孵化步数']}'),
-                    Text('体重:${pokemonList[index]['体重']}kg   身高:${pokemonList[index]['身高']}m'),
-                  ],
-                )
-              ],
-            ),
-           ),
+          DetailCardOne(index: index),
+          MyCard(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text('普通特性'),
+                    flex: 2,
+                  ),
+                  Expanded(
+                    child: Text('梦特性'),
+                    flex: 1,
+                  )
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  ablityButton(index, 0),
+                  ablityButton(index, 1),
+                  ablityButton(index, 2),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text('种族值'),
+                    flex: 4,
+                  ),
+                  Expanded(
+                    child: Text('50级'),
+                    flex: 1,
+                  ),
+                  Expanded(
+                    child: Text('100级'),
+                    flex: 1,
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+
+                ],
+              ),
+            ],
+          ))
         ],
       ),
     );
   }
 }
+
+//第一部分卡片，包括图片、名称、种类、属性、高、重
+class DetailCardOne extends StatelessWidget {
+  final index;
+  DetailCardOne({Key key, this.index}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return MyCard(
+      height: 180,
+      child: Row(
+        children: <Widget>[
+          chipImg(8.0, 'lib/assets/bg-1.sh.png'),
+          Container(width: 10), //10间隔
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '${pokemonList[index]['中文名']}',
+                  style: TextStyle(fontSize: 24),
+                  textAlign: TextAlign.end,
+                ),
+                Text(
+                    '${pokemonList[index]['日文名']} · ${pokemonList[index]['英文名']}'),
+                Text('${pokemonList[index]['种族']}'),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        child: RaisedButton(
+                          color: getColorFromType(pokemonList[index]['属性'][0]),
+                          onPressed: () {
+                            print(pokemonList[index]['属性'][0]);
+                          },
+                          child: Text('${pokemonList[index]['属性'][0]}'),
+                        ),
+                        padding: EdgeInsets.only(right: 2, left: 2),
+                      ),
+                    ),
+                    Expanded(
+                      child: pokemonList[index]['属性'][1] == null
+                          ? Container()
+                          : Padding(
+                              child: RaisedButton(
+                                color: getColorFromType(
+                                    pokemonList[index]['属性'][1]),
+                                onPressed: () {
+                                  print(pokemonList[index]['属性'][1]);
+                                },
+                                child: Text('${pokemonList[index]['属性'][1]}'),
+                              ),
+                              padding: EdgeInsets.only(right: 2, left: 2),
+                            ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Text('体重:${pokemonList[index]['体重']}kg')),
+                    Expanded(child: Text('身高:${pokemonList[index]['身高']}m')),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+//基础部件
 
 //我的卡片部件，快捷的设置高度、圆角、内边距和颜色
 //默认值：高度200,圆角16,颜色 blue,内边距：8

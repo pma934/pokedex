@@ -1,7 +1,7 @@
 //这个是一个把 精灵属性 变成 颜色 的函数
 import 'package:flutter/material.dart';
 
-Color getColor(String type) {
+Color getColorFromType(String type) {
   switch (type) {
     case '草':
       return Color.fromRGBO(119, 204, 85, 1);
@@ -46,8 +46,8 @@ Color getColor(String type) {
 }
 
 LinearGradient getLinearGradient(String type1, String type2) {
-  Color color1 = getColor(type1);
-  Color color2 = getColor(type2);
+  Color color1 = getColorFromType(type1);
+  Color color2 = getColorFromType(type2);
 
   return LinearGradient(
       begin: Alignment(-1, -0.4),
