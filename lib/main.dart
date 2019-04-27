@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/model/ItemList.dart';
 import 'package:pokedex/model/PokeList.dart';
 import 'package:pokedex/model/SkillList.dart';
+import 'package:vibrate/vibrate.dart';
 
 void main() {
   runApp(MyApp());
@@ -84,6 +85,7 @@ class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo> {
   }
 
   void _onTapHandler(int index) {
+    Vibrate.vibrate();
     setState(() {
       _currentIndex = index;
       widget.callBack(index);
