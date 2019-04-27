@@ -59,37 +59,14 @@ class DetailCardTwo extends StatefulWidget {
 
 class _DetailCardTwoState extends State<DetailCardTwo> {
   Widget ablityButton(index, n) {
-    return Expanded(
-      child: Padding(
-        child: pokemonList[index]['特性'][n] == null
-            ? RaisedButton(
-                color: Colors.blue[200],
-                onPressed: () {},
-              )
-            : RaisedButton(
-                color: Colors.blue[200],
-                onPressed: () {
-                  print(abilitiesList[pokemonList[index]['特性'][n] - 1]['简介']);
-                },
-                child: Text(
-                    '${abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称']}'),
-              ),
-        padding: EdgeInsets.only(right: 2, left: 2),
-      ),
-    );
-  }
-
-  Widget effortsValue(value) {
-    return 
-      Expanded(
-        child: Card(
-          color: Colors.blue[200],
-          child: Text('$value', textAlign: TextAlign.center),
-          
-        ),
-        flex: 1,
-      )
-    ;
+    return pokemonList[index]['特性'][n] == null
+        ? MyTextCard(value: '')
+        : MyTextCard(
+            onTap: () {
+              print(abilitiesList[pokemonList[index]['特性'][n] - 1]['简介']);
+            },
+            value: abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称'],
+          );
   }
 
   double _sliderValue = 50;
@@ -123,6 +100,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
             ],
           ),
           Divider(
+            //间隔
             color: Colors.white,
             height: 15.0,
           ),
@@ -157,6 +135,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
           //种族值内容
           RacialValueBox(lv: _sliderValue.toInt(), index: widget.index),
           Divider(
+            //间隔
             color: Colors.white,
             height: 15.0,
           ),
@@ -165,17 +144,17 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
             //特性标题
             children: <Widget>[
               Text('HP'),
-              effortsValue(pokemonList[widget.index]['努力值'][5]),
+              MyTextCard(value: '${pokemonList[widget.index]['努力值'][5]}',height:16),
               Text('物攻'),
-              effortsValue(pokemonList[widget.index]['努力值'][4]),
+              MyTextCard(value: '${pokemonList[widget.index]['努力值'][4]}',height:16),
               Text('物防'),
-              effortsValue(pokemonList[widget.index]['努力值'][3]),
+              MyTextCard(value: '${pokemonList[widget.index]['努力值'][3]}',height:16),
               Text('特功'),
-              effortsValue(pokemonList[widget.index]['努力值'][2]),
+              MyTextCard(value: '${pokemonList[widget.index]['努力值'][2]}',height:16),
               Text('特防'),
-              effortsValue(pokemonList[widget.index]['努力值'][1]),
+              MyTextCard(value: '${pokemonList[widget.index]['努力值'][1]}',height:16),
               Text('速度'),
-              effortsValue(pokemonList[widget.index]['努力值'][0]),
+              MyTextCard(value: '${pokemonList[widget.index]['努力值'][0]}',height:16),
             ],
           ),
         ],
@@ -188,68 +167,137 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
 class DetailCardOne extends StatelessWidget {
   final int index;
   DetailCardOne({Key key, this.index}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MyCard(
-      height: 180,
-      child: Row(
-        children: <Widget>[
-          chipImg(8.0, 'lib/assets/bg-1.sh.png'),
-          Container(width: 10), //10间隔
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  '${pokemonList[index]['中文名']}',
-                  style: TextStyle(fontSize: 24),
-                  textAlign: TextAlign.end,
-                ),
-                Text(
-                    '${pokemonList[index]['日文名']} · ${pokemonList[index]['英文名']}'),
-                Text('${pokemonList[index]['种族']}'),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        child: RaisedButton(
-                          color: getColorFromType(pokemonList[index]['属性'][0]),
-                          onPressed: () {
-                            print(pokemonList[index]['属性'][0]);
-                          },
-                          child: Text('${pokemonList[index]['属性'][0]}'),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+          Widget>[
+        Row(
+          children: <Widget>[
+            chipImg(8.0, 'lib/assets/bg-1.sh.png'),
+            Container(width: 10), //10间隔
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${pokemonList[index]['中文名']}',
+                    style: TextStyle(fontSize: 24),
+                    textAlign: TextAlign.end,
+                  ),
+                  Text(
+                      '${pokemonList[index]['日文名']} · ${pokemonList[index]['英文名']}'),
+                  Text('${pokemonList[index]['种族']}'),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          child: RaisedButton(
+                            color:
+                                getColorFromType(pokemonList[index]['属性'][0]),
+                            onPressed: () {
+                              print(pokemonList[index]['属性'][0]);
+                            },
+                            child: Text('${pokemonList[index]['属性'][0]}'),
+                          ),
+                          padding: EdgeInsets.only(right: 2, left: 2),
                         ),
-                        padding: EdgeInsets.only(right: 2, left: 2),
                       ),
-                    ),
-                    Expanded(
-                      child: pokemonList[index]['属性'][1] == null
-                          ? Container()
-                          : Padding(
-                              child: RaisedButton(
-                                color: getColorFromType(
-                                    pokemonList[index]['属性'][1]),
-                                onPressed: () {
-                                  print(pokemonList[index]['属性'][1]);
-                                },
-                                child: Text('${pokemonList[index]['属性'][1]}'),
+                      Expanded(
+                        child: pokemonList[index]['属性'][1] == null
+                            ? Container()
+                            : Padding(
+                                child: RaisedButton(
+                                  color: getColorFromType(
+                                      pokemonList[index]['属性'][1]),
+                                  onPressed: () {
+                                    print(pokemonList[index]['属性'][1]);
+                                  },
+                                  child: Text('${pokemonList[index]['属性'][1]}'),
+                                ),
+                                padding: EdgeInsets.only(right: 2, left: 2),
                               ),
-                              padding: EdgeInsets.only(right: 2, left: 2),
-                            ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(child: Text('体重:${pokemonList[index]['体重']}kg')),
-                    Expanded(child: Text('身高:${pokemonList[index]['身高']}m')),
-                  ],
-                ),
-              ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(child: Text('体重:${pokemonList[index]['体重']}kg')),
+                      Expanded(child: Text('身高:${pokemonList[index]['身高']}m')),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        Divider(
+          //间隔
+          color: Colors.white,
+          height: 5.0,
+        ),
+        Row(
+          //特性标题
+          children: <Widget>[
+            Expanded(
+              child: Text('捕获度'),
+              flex: 1,
             ),
-          )
-        ],
-      ),
+            Expanded(
+              child: Text('雌雄比例'),
+              flex: 1,
+            ),
+            Expanded(
+              child: Text('初始亲密度'),
+              flex: 1,
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            MyTextCard(value: '${pokemonList[index]['捕获率']}'),
+            pokemonList[index]['性别比'] == -1
+                ? MyTextCard(value: '无性别')
+                : MyTextCard(
+                    value:
+                        '${pokemonList[index]['性别比']}:${8 - pokemonList[index]['性别比']}'),
+            MyTextCard(value: '${pokemonList[index]['初始亲密度']}'),
+          ],
+        ),
+        Row(
+          //特性标题
+          children: <Widget>[
+            Expanded(
+              child: Text('蛋组'),
+              flex: 2,
+            ),
+            Expanded(
+              child: Text('孵化步数'),
+              flex: 1,
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            MyTextCard(
+                value: '${pokemonList[index]['蛋组'][0]}',
+                onTap: () {
+                  print(pokemonList[index]['蛋组'][0]);
+                }),
+            pokemonList[index]['蛋组'].length == 1
+                ? MyTextCard(
+                    value: '',
+                  )
+                : MyTextCard(
+                    value: '${pokemonList[index]['蛋组'][1]}',
+                    onTap: () {
+                      print(pokemonList[index]['蛋组'][1]);
+                    }),
+            MyTextCard(value: '${pokemonList[index]['孵化步数']}步'),
+          ],
+        ),
+      ]),
     );
   }
 }
@@ -276,8 +324,7 @@ class RacialValue extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Expanded(flex: 3, child: Text(name)),
-          Expanded(flex: 2, child: Text('$value')),
-          Container(width: 10),
+          Expanded(flex: 3, child: Text('$value')),
           Expanded(
             flex: 15,
             child: SizedBox(
@@ -295,7 +342,7 @@ class RacialValue extends StatelessWidget {
               ),
             ),
           ),
-          Container(width: 20),
+          Container(width: 10),
           Expanded(flex: 5, child: Text('${valueScope[0]}~${valueScope[1]}')),
         ],
       ),
@@ -399,4 +446,39 @@ Widget chipImg(double radius, String url) {
     borderRadius: BorderRadius.all(Radius.circular(radius)),
     child: Image.asset(url),
   );
+}
+
+//一个文字居中，可带点击事件，方便控制高度的小卡片/按钮
+//默认高度24
+class MyTextCard extends StatelessWidget {
+  MyTextCard({Key key, @required this.value, this.height, this.onTap})
+      : super(key: key);
+  final String value;
+  final double height;
+  final onTap;
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Stack(
+        children: <Widget>[
+          Card(
+            color: Colors.blue[200],
+            child: Container(
+              height: height ?? 24,
+              alignment: Alignment(0, 0),
+              child: Text('$value'),
+            ),
+          ),
+          onTap == null
+              ? Container()
+              : Positioned.fill(
+                  child: InkWell(
+                    onTap: onTap,
+                  ),
+                )
+        ],
+      ),
+      flex: 1,
+    );
+  }
 }
