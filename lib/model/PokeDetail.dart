@@ -58,12 +58,13 @@ class DetailCardThree extends StatelessWidget {
   DetailCardThree({Key key, this.index}) : super(key: key);
   final int index;
 
-  imageButtonAndName(list) {
+  imageButtonAndName(list, suffix) {
     var pokemon = pokemonList[list['species'] - 1];
     return Column(
       children: <Widget>[
         InkWell(
-          child: Image.asset('lib/assets/PokeIcon/${pokemon['全国编号']}.png',
+          child: Image.asset(
+              'lib/assets/PokeIcon/${pokemon['全国编号']}$suffix.png',
               height: 60),
           onTap: () {
             print(pokemon['中文名']);
@@ -90,15 +91,27 @@ class DetailCardThree extends StatelessWidget {
           return Column(
             children: <Widget>[
               Row(children: <Widget>[
-                imageButtonAndName(a),
+                imageButtonAndName(a, ''),
                 Expanded(
                     flex: 1,
                     child: Text(
                       x['details'][0]['str'],
                       textAlign: TextAlign.center,
                     )),
-                imageButtonAndName(x),
+                imageButtonAndName(x, ''),
               ]),
+              x['details_times'] == 2
+                  ? Row(children: <Widget>[
+                      imageButtonAndName(a, ''),
+                      Expanded(
+                          flex: 1,
+                          child: Text(
+                            x['details'][1]['str'],
+                            textAlign: TextAlign.center,
+                          )),
+                      imageButtonAndName(x, '-otherEvolutionWay'),
+                    ])
+                  : Container(),
               createEvolutionChain(x)
             ],
           );
@@ -259,7 +272,8 @@ class DetailCardOne extends StatelessWidget {
           Widget>[
         Row(
           children: <Widget>[
-            chipImg(8.0, 'lib/assets/PokeIcon/${pokemonList[index]['全国编号']}.png'),
+            chipImg(
+                8.0, 'lib/assets/PokeIcon/${pokemonList[index]['全国编号']}.png'),
             Container(width: 10), //10间隔
             Expanded(
               child: Column(
@@ -444,9 +458,13 @@ class RacialValueBox extends StatelessWidget {
   List<int> hpValue(x, lv) {
     int min;
     int max;
-    min = (x * 2 * lv / 100 + lv + 10).toInt();
-    max = ((x * 2 + 31 + 63) * lv / 100 + lv + 10).toInt();
-    return [min, max];
+    if (x > 1) {
+      min = (x * 2 * lv / 100 + lv + 10).toInt();
+      max = ((x * 2 + 31 + 63) * lv / 100 + lv + 10).toInt();
+      return [min, max];
+    } else {
+      return [1, 1];
+    }
   }
 
   List<int> otherValue(x, lv) {
@@ -532,10 +550,13 @@ class MyCard extends StatelessWidget {
 Widget chipImg(double radius, String url) {
   return Container(
     decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage('lib/assets/bg-1.md.png'))),
+      borderRadius: BorderRadius.all(Radius.circular(radius)),
+      color: Colors.yellow[100],
+      //image: DecorationImage(image: AssetImage('lib/assets/bg-1.md.png')),
+    ),
     child: ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: Image.asset(url),
+      child: Image.asset(url, height: 128),
     ),
   );
 }

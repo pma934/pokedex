@@ -78,8 +78,11 @@ class PokemonCard extends StatelessWidget {
                     highlightColor: Colors.white.withOpacity(0.1), //点击填充
                     onTap: () {
                       print('${pokemonList[index]['中文名']}');
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>PokeDetail(currentPage: index)),
-                       );
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PokeDetail(currentPage: index)),
+                      );
                     },
                   )),
             )
@@ -87,4 +90,3 @@ class PokemonCard extends StatelessWidget {
         ));
   }
 }
-
