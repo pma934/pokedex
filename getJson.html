@@ -14,7 +14,9 @@
     <button onclick="getdata1(1)">获取全国Id、特性、身高、体重、属性、种族值、努力值、英文名、</button>
     <button onclick="getdata2(1)">获取种族、捕获率、初始亲密度、颜色、蛋组、进化表、世代、性别比、性别差异、形态切换、形式描述、孵化步数、幼年宝可梦、中文名、日文名</button>
     <br>
-    <button onclick="getdataX(10001)">获取XXX</button>
+    <button onclick="getdata3(1)">进化链</button>
+    <br>
+    <button onclick="getdataX(1)">获取XXX</button>
     <br>
     <button onclick="save()">save</button>
 
@@ -65,7 +67,7 @@
             console.log(res)
             pokedata[num - 1] = pokedata[num - 1] ? pokedata[num - 1] : {}
 
-            let 全国编号 = ('000'+res.id).slice(-3)
+            let 全国编号 = ('000' + res.id).slice(-3)
             let 身高 = res.height / 10    //m
             let 体重 = res.weight / 10    //kg
             let 英文名 = res.name
@@ -121,16 +123,16 @@
             let 初始亲密度 = res.base_happiness
             let 颜色 = res.color.name
             let 蛋组 = []
-            res.egg_groups.map(x => {             
-                蛋组.unshift(蛋组对照[x.url.split('/')[6]-1])
+            res.egg_groups.map(x => {
+                蛋组.unshift(蛋组对照[x.url.split('/')[6] - 1])
             })
             let 进化表 = res.evolution_chain.url.split('/')[6] * 1
-            let 世代 = res.generation.name.split('-')[1].toUpperCase() 
+            let 世代 = res.generation.name.split('-')[1].toUpperCase()
             let 性别比 = res.gender_rate  //若不为-1,雌雄比 =[性别比例：8-性别比例];若为-1,无性别
             let 性别差异 = res.has_gender_differences
             let 形态切换 = res.forms_switchable //Mega、元素回归、达摩狒狒等
             let 形式描述 = res.form_descriptions //??
-            let 孵化步数 = res.hatch_counter*257  //2570步
+            let 孵化步数 = res.hatch_counter * 257  //2570步
             let 幼年宝可梦 = res.is_baby
             let 中文名 = res.names[0].name
             let 日文名 = res.names[1].name
@@ -143,15 +145,15 @@
                 '颜色': 颜色,
                 '蛋组': 蛋组,
                 '进化表': 进化表,
-                '世代':世代,
-                '性别比':性别比,
+                '世代': 世代,
+                '性别比': 性别比,
                 //'性别差异':性别差异,
                 //'形态切换':形态切换,
                 //'形式描述':形式描述,
-                '孵化步数':孵化步数,
+                '孵化步数': 孵化步数,
                 //'幼年宝可梦':幼年宝可梦,
-                '中文名':中文名,
-                '日文名':日文名,
+                '中文名': 中文名,
+                '日文名': 日文名,
             }
 
             Object.assign(pokedata[num - 1], poke)
@@ -159,17 +161,161 @@
         }).then(() => getdata2(num + 1))
     }
 
-    var getdataX = (num) => {
+    var getdata3 = (num) => {
         $.ajax({
-            url: 'https://pokeapi.co/api/v2/ability/' + num,
+            url: 'https://pokeapi.co/api/v2/evolution-chain/' + num,
             type: "GET",
             success: function (res) {
                 return res
+            },
+            error: function (err) {
+                return err
+            }
+        }).then(res => {
+            console.log(res.chain.species.name)
+
+            let id = res.id
+
+            let species = res.chain.species.url.split('/')[6] * 1;
+            let chain = []
+
+
+
+            function ddd(x) {
+                var str = "";
+                var iconNum = 0;
+                var icon = [null, null]
+                if (x.min_level) {
+                    str += x.min_level + "级 "
+                }
+                if (x.gender == 2) {
+                    str += "雄性"
+                } else if (x.gender == 1) {
+                    str += "雌性"
+                }
+                if (x.needs_overworld_rain) {
+                    str += "下雨时"
+                }
+                if (x.trade_species) {
+                    str += "与" + x.trade_species.name
+                    iconNum += 1
+                    icon[0] = '精灵'
+                    icon[1] = x.trade_species.url.split('/')[6] * 1;
+                }
+                if (x.party_species) {
+                    str += "队伍里有" + x.party_species.name
+                    iconNum += 1
+                    icon[0] = '精灵'
+                    icon[1] = x.party_species.url.split('/')[6] * 1;
+                }
+                if (x.party_type) {
+                    str += "队伍里有" + x.party_type.name + "系精灵"
+                }
+                if (x.turn_upside_down) {
+                    str += "翻转3DS"
+                }
+
+                if (x.min_affection) {
+                    str += "羁绊" + x.min_affection + "心"
+                }
+
+                if (x.min_beauty) {
+                    str += "美丽度" + x.min_beauty + "点"
+                }
+
+                if (x.min_happiness) {
+                    str += "亲密度" + x.min_happiness + "点"
+                }
+
+                if (x.time_of_day) {
+                    str += "在" + x.time_of_day + "时间段"
+                }
+
+                if (x.location) {
+                    str += "在" + x.location.name + "附近"
+                }
+
+                if (x.known_move) {
+                    str += "学会" + x.known_move.name + "技能后"
+                    iconNum += 1
+                    icon[0] = '技能'
+                    icon[1] = x.known_move.url.split('/')[6] * 1;
+                }
+                if (x.known_move_type) {
+                    str += "学会" + x.known_move_type.name + "属性技能后"
+                }
+                if (x.held_item) {
+                    item = x.held_item.url.split('/')[6] * 1;
+                    str += "携带道具"
+                    iconNum += 1
+                    icon[0] = '道具'
+                    icon[1] = x.held_item.url.split('/')[6] * 1;
+                }
+                if (x.item) {
+                    item = x.item.url.split('/')[6] * 1;
+                    str += "使用道具"
+                    iconNum += 1
+                    icon[0] = '道具'
+                    icon[1] = x.item.url.split('/')[6] * 1;
+                }
+                switch (x.trigger.name) {
+                    case "level-up": str += "升级进化"; break;
+                    case "trade": str += "通信进化"; break;
+                    case "use-item": str += "进化"; break;
+                    case "shed": str += "队伍有空位时"; break;
+                }
+
+                return {
+                    'str': str,
+                    'iconNum': iconNum,
+                    'icon': icon,
+                };
+            }
+
+            function ccc(x) {
+                return x.map(x => {
+                    return {
+                        'species': x.species.url.split('/')[6] * 1,
+                        'details': x.evolution_details.map(x => ddd(x)),
+                        'details_times': x.evolution_details.length,
+                        'chain': ccc(x.evolves_to)
+                    }
+                })
+            }
+
+            pokedata[num - 1] = {
+                'id': id,
+                'species': species,
+                'chain': ccc(res.chain.evolves_to)
+            };
+
+
+
+        }, err => {
+            console.log(err)
+            pokedata[num - 1] = err
+        }).then(() => {
+            if (num < 430) {
+                getdata3(num + 1)
+            }
+        })
+    }
+
+    var getdataX = (num) => {
+        $.ajax({
+            url: 'https://pokeapi.co/api/v2/evolution-chain/' + num,
+            type: "GET",
+            success: function (res) {
+                return res
+            },
+            error: function (err) {
+                return err
             }
         }).then(res => {
             console.log(res)
-            pokedata[num - 1] = res.name;
-        }).then(() => getdataX(num + 1))
+        }, err => {
+            console.log(err)
+        }).then(() => { })
     }
 
     function save() {
