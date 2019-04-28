@@ -14,14 +14,16 @@ class PokeList extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: GridView.count(
-        padding: EdgeInsets.all(8.0),
-        crossAxisCount: 3,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-        children: List.generate(pokemonList.length, (int index) {
-          return PokemonCard(index: index);
-        }),
+      child: Scrollbar(
+        child: GridView.count(
+          padding: EdgeInsets.all(8.0),
+          crossAxisCount: 3,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+          children: List.generate(pokemonList.length, (int index) {
+            return PokemonCard(index: index);
+          }),
+        ),
       ),
     );
   }

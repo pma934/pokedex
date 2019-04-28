@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/model/data/abilitiesList.dart';
+import 'package:pokedex/model/data/evolution-chain.dart';
 import 'package:pokedex/model/data/pokemonList-detail.dart';
 import 'package:pokedex/model/fuction/AttrToColor.dart';
 
@@ -43,9 +44,86 @@ class PokeItem extends StatelessWidget {
         children: <Widget>[
           DetailCardOne(index: index),
           DetailCardTwo(index: index),
+          DetailCardThree(
+            index: index,
+          )
         ],
       ),
     );
+  }
+}
+
+//第三部分卡片
+class DetailCardThree extends StatelessWidget {
+  DetailCardThree({Key key, this.index}) : super(key: key);
+  final int index;
+
+  imageButtonAndName(list) {
+    var pokemon = pokemonList[list['species'] - 1];
+    return Column(
+      children: <Widget>[
+        InkWell(
+          child: Image.asset('lib/assets/PokeIcon/${pokemon['全国编号']}.png',
+              height: 60),
+          onTap: () {
+            print(pokemon['中文名']);
+          },
+        ),
+        Text(pokemon['中文名'])
+      ],
+    );
+  }
+
+  createEvolutionChain(a) {
+    if (a['chain'].length == 0) {
+      if (a['id'] != null) {
+        return Container(
+            width: double.infinity,
+            child: Text('没有进化', textAlign: TextAlign.center));
+      } else {
+        return Container();
+      }
+    } else {
+      return Column(
+          children: a['chain'].map<Widget>(
+        (x) {
+          return Column(
+            children: <Widget>[
+              Row(children: <Widget>[
+                imageButtonAndName(a),
+                Expanded(
+                    flex: 1,
+                    child: Text(
+                      x['details'][0]['str'],
+                      textAlign: TextAlign.center,
+                    )),
+                imageButtonAndName(x),
+              ]),
+              createEvolutionChain(x)
+            ],
+          );
+        },
+      ).toList());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyCard(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          '进化路线',
+          textAlign: TextAlign.start,
+        ),
+        Divider(
+          color: Colors.white,
+          height: 15.0,
+        ),
+        createEvolutionChain(evolutionChain[pokemonList[index]['进化表'] - 1]),
+      ],
+    ));
   }
 }
 
@@ -144,17 +222,23 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
             //特性标题
             children: <Widget>[
               Text('HP'),
-              MyTextCard(value: '${pokemonList[widget.index]['努力值'][5]}',height:16),
+              MyTextCard(
+                  value: '${pokemonList[widget.index]['努力值'][5]}', height: 16),
               Text('物攻'),
-              MyTextCard(value: '${pokemonList[widget.index]['努力值'][4]}',height:16),
+              MyTextCard(
+                  value: '${pokemonList[widget.index]['努力值'][4]}', height: 16),
               Text('物防'),
-              MyTextCard(value: '${pokemonList[widget.index]['努力值'][3]}',height:16),
+              MyTextCard(
+                  value: '${pokemonList[widget.index]['努力值'][3]}', height: 16),
               Text('特功'),
-              MyTextCard(value: '${pokemonList[widget.index]['努力值'][2]}',height:16),
+              MyTextCard(
+                  value: '${pokemonList[widget.index]['努力值'][2]}', height: 16),
               Text('特防'),
-              MyTextCard(value: '${pokemonList[widget.index]['努力值'][1]}',height:16),
+              MyTextCard(
+                  value: '${pokemonList[widget.index]['努力值'][1]}', height: 16),
               Text('速度'),
-              MyTextCard(value: '${pokemonList[widget.index]['努力值'][0]}',height:16),
+              MyTextCard(
+                  value: '${pokemonList[widget.index]['努力值'][0]}', height: 16),
             ],
           ),
         ],
@@ -175,7 +259,7 @@ class DetailCardOne extends StatelessWidget {
           Widget>[
         Row(
           children: <Widget>[
-            chipImg(8.0, 'lib/assets/bg-1.sh.png'),
+            chipImg(8.0, 'lib/assets/PokeIcon/${pokemonList[index]['全国编号']}.png'),
             Container(width: 10), //10间隔
             Expanded(
               child: Column(
@@ -302,7 +386,9 @@ class DetailCardOne extends StatelessWidget {
   }
 }
 
-//特定功能部件
+///*********** */
+///特定功能部件
+///*********** */
 
 //每项种族值
 class RacialValue extends StatelessWidget {
@@ -410,7 +496,9 @@ class RacialValueBox extends StatelessWidget {
   }
 }
 
-//基础部件
+///********** */
+///基础部件
+///********** */
 
 //我的卡片部件，快捷的设置高度、圆角、内边距和颜色
 //默认值：高度200,圆角16,颜色 blue,内边距：8
@@ -442,13 +530,17 @@ class MyCard extends StatelessWidget {
 
 //带圆角的图片
 Widget chipImg(double radius, String url) {
-  return ClipRRect(
-    borderRadius: BorderRadius.all(Radius.circular(radius)),
-    child: Image.asset(url),
+  return Container(
+    decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('lib/assets/bg-1.md.png'))),
+    child: ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(radius)),
+      child: Image.asset(url),
+    ),
   );
 }
 
-//一个文字居中，可带点击事件，方便控制高度的小卡片/按钮
+//一个文字居中，可带点击事件，方便控制高度的小卡片/按钮,需要使用在column或者row中
 //默认高度24
 class MyTextCard extends StatelessWidget {
   MyTextCard({Key key, @required this.value, this.height, this.onTap})

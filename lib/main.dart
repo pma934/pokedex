@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
 //主页面底部导航
 class BottomNavigationBarDemo extends StatefulWidget {
-  int selectedIndex;
+  final int selectedIndex;
   final callBack;
   BottomNavigationBarDemo({Key key, this.selectedIndex, this.callBack})
       : super(key: key);
@@ -85,7 +85,7 @@ class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo> {
   }
 
   void _onTapHandler(int index) {
-    Vibrate.vibrate();
+    //Vibrate.vibrate();
     setState(() {
       _currentIndex = index;
       widget.callBack(index);
