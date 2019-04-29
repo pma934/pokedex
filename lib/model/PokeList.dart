@@ -81,7 +81,7 @@ class PokemonCard extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) =>
-                                PokeDetail(currentPage: index)),
+                                PokeDetail(initialPage: index)),
                       );
                     },
                   )),

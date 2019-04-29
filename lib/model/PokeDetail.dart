@@ -5,28 +5,48 @@ import 'package:pokedex/model/data/pokemonList-detail.dart';
 import 'package:pokedex/model/data/typesHit.dart';
 import 'package:pokedex/model/fuction/AttrToColor.dart';
 
-class PokeDetail extends StatelessWidget {
-  PokeDetail({Key key, @required this.currentPage}) : super(key: key);
-  final int currentPage;
+class PokeDetail extends StatefulWidget {
+  PokeDetail({Key key, @required this.initialPage}) : super(key: key);
+  final int initialPage;
+  @override
+  _PokeDetailState createState() => _PokeDetailState();
+}
+
+class _PokeDetailState extends State<PokeDetail> {
+  PageController _pageController;
+  @override
+  void initState() {
+    super.initState();
+    _pageController =
+        PageController(initialPage: widget.initialPage, keepPage: false);
+  }
+
+  void jumpPage(x) { //页面跳转
+    print('PageView页面跳转');
+    setState(() {
+      _pageController.animateToPage(x,
+          duration: Duration(milliseconds: 1),
+          curve: Curves.fastOutSlowIn);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageView(
       //pageSnapping: false,
-      onPageChanged: (currentPage) => debugPrint('Page:$currentPage'),
-      controller: PageController(
-        initialPage: currentPage,
-        keepPage: false,
-      ),
+      //onPageChanged: (nowPage) => jumpPage(2*nowPage),//debugPrint('Page:$nowPage'),
+      controller: _pageController,
       children: List.generate(pokemonList.length, (int index) {
-        return PokeItem(index: index);
+        return PokeItem(index: index, jumpPage: jumpPage);
       }),
     );
   }
 }
 
 class PokeItem extends StatelessWidget {
-  PokeItem({Key key, this.index}) : super(key: key);
+  PokeItem({Key key,@required this.index,@required this.jumpPage}) : super(key: key);
   final int index;
+  final jumpPage;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +59,15 @@ class PokeItem extends StatelessWidget {
             style: TextStyle(fontSize: 20),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            tooltip: 'Open shopping cart',
+            onPressed: () {
+              jumpPage(99);
+            },
+          ),
+        ],
       ),
       body: ListView(
         // shrinkWrap: true,
@@ -48,6 +77,7 @@ class PokeItem extends StatelessWidget {
           DetailCardTwo(index: index),
           DetailCardThree(
             index: index,
+            jumpPage:jumpPage,
           )
         ],
       ),
@@ -55,20 +85,29 @@ class PokeItem extends StatelessWidget {
   }
 }
 
-//第三部分卡片
+//第三部分卡片进化表
 class DetailCardThree extends StatelessWidget {
-  DetailCardThree({Key key, this.index}) : super(key: key);
+  DetailCardThree({Key key,@required this.index,@required this.jumpPage}) : super(key: key);
   final int index;
+  final jumpPage;
 
   imageButtonAndName(list, suffix) {
     var pokemon = pokemonList[list['species'] - 1];
     return Column(
       children: <Widget>[
         InkWell(
-          child: Image.asset('lib/assets/PokePic/${pokemon['图片编号']}$suffix.png',
-              height: 60),
+          child: Container(
+            decoration: BoxDecoration(
+              color: index == pokemon['图片编号']-1?Colors.yellow[100]:Colors.blue[100],
+              shape:BoxShape.circle,
+            ),
+            child: Image.asset('lib/assets/PokePic/${pokemon['图片编号']}$suffix.png',
+                height: 60),
+          ),
           onTap: () {
-            print(pokemon['中文名']);
+            if(index != pokemon['图片编号']-1){
+              jumpPage(pokemon['图片编号']-1);
+            }       
           },
         ),
         Text(pokemon['中文名'])
@@ -141,9 +180,9 @@ class DetailCardThree extends StatelessWidget {
   }
 }
 
-//第二部分卡片
+//第二部分卡片、特性、种族值、击败获取的努力值
 class DetailCardTwo extends StatefulWidget {
-  DetailCardTwo({Key key, this.index}) : super(key: key);
+  DetailCardTwo({Key key,@required this.index}) : super(key: key);
   final int index;
   @override
   _DetailCardTwoState createState() => _DetailCardTwoState();
@@ -270,12 +309,12 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
   }
 }
 
-//第一部分卡片，包括图片、名称、种类、属性、高、重
+//第一部分卡片，包括图片、名称、种类、属性、高、重、属性相性
 class DetailCardOne extends StatelessWidget {
   final int index;
-  DetailCardOne({Key key, this.index}) : super(key: key);
+  DetailCardOne({Key key,@required this.index}) : super(key: key);
 
-  //得到属性抗性
+  //得到属性相性
   String getTypeDefense(List myTypes, String atkType) {
     double gtd = 1;
     for (var myType in myTypes) {
@@ -443,27 +482,39 @@ class DetailCardOne extends StatelessWidget {
           color: Colors.white,
           height: 5.0,
         ),
-        Text('属性抗性'),
+        Text('属性相性'),
         Row(
-          children: ['一般', '格斗', '飞行', '毒', '地面']
+          children: ['一般', '格斗', '飞行']
               .map((type) => getTypeDefenseWidget(type))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
-          children: ['岩石', '虫', '幽灵', '钢', '火']
+          children: ['毒', '地面', '岩石']
               .map((type) => getTypeDefenseWidget(type))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
-          children: ['水', '草', '电', '超能力', '冰']
+          children: ['虫', '幽灵', '钢']
               .map((type) => getTypeDefenseWidget(type))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
-          children: ['龙', '恶', '妖精',null,null]
+          children: ['火', '水', '草']
+              .map((type) => getTypeDefenseWidget(type))
+              .expand((x) => x)
+              .toList(), //先展开，再组合
+        ),
+        Row(
+          children: ['电', '超能力', '冰']
+              .map((type) => getTypeDefenseWidget(type))
+              .expand((x) => x)
+              .toList(), //先展开，再组合
+        ),
+        Row(
+          children: ['龙', '恶', '妖精']
               .map((type) => getTypeDefenseWidget(type))
               .expand((x) => x)
               .toList(), //先展开，再组合
