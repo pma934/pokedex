@@ -10,6 +10,7 @@ class PokeDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageView(
+      //pageSnapping: false,
       onPageChanged: (currentPage) => debugPrint('Page:$currentPage'),
       controller: PageController(
         initialPage: currentPage,
@@ -64,7 +65,7 @@ class DetailCardThree extends StatelessWidget {
       children: <Widget>[
         InkWell(
           child: Image.asset(
-              'lib/assets/PokeIcon/${pokemon['全国编号']}$suffix.png',
+              'lib/assets/PokePic/${pokemon['图片编号']}$suffix.png',
               height: 60),
           onTap: () {
             print(pokemon['中文名']);
@@ -273,7 +274,7 @@ class DetailCardOne extends StatelessWidget {
         Row(
           children: <Widget>[
             chipImg(
-                8.0, 'lib/assets/PokeIcon/${pokemonList[index]['全国编号']}.png'),
+                8.0, 'lib/assets/PokePic/${pokemonList[index]['图片编号']}.png'),
             Container(width: 10), //10间隔
             Expanded(
               child: Column(

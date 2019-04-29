@@ -2583,31 +2583,31 @@ List evolutionChain = [
             ],
             "details_times": 1,
             "chain": []
-          },
+          }
+        ]
+      },
+      {
+        "species": 268,
+        "details": [
           {
-            "species": 268,
+            "str": "7级 升级进化",
+            "iconNum": 0,
+            "icon": [null, null]
+          }
+        ],
+        "details_times": 1,
+        "chain": [
+          {
+            "species": 269,
             "details": [
               {
-                "str": "7级 升级进化",
+                "str": "10级 升级进化",
                 "iconNum": 0,
                 "icon": [null, null]
               }
             ],
             "details_times": 1,
-            "chain": [
-              {
-                "species": 269,
-                "details": [
-                  {
-                    "str": "10级 升级进化",
-                    "iconNum": 0,
-                    "icon": [null, null]
-                  }
-                ],
-                "details_times": 1,
-                "chain": []
-              }
-            ]
+            "chain": []
           }
         ]
       }
