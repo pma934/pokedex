@@ -16,7 +16,7 @@
     <br>
     <button onclick="getdata3(1)">进化链</button>
     <br>
-    <button onclick="getdataX(10001)">获取XXX</button>
+    <button onclick="getdataX(1)">获取XXX</button>
     <br>
     <button onclick="save()">save</button>
     <input type="file" id="files"  onchange="handleFiles()"/>
@@ -304,32 +304,75 @@
     }
 
     //other
+    // pokedata = {}
+    // var getdataX = (num) => {
+    //     $.ajax({
+    //         url: 'https://pokeapi.co/api/v2/pokemon-form/' + num,
+    //         type: "GET",
+    //         success: function (res) {
+    //             return res
+    //         }
+    //     }).then(res => {
+    //         console.log(res)   
+    //         pokedata[num - 1] = pokedata[num - 1] ? pokedata[num - 1] : {}
+
+    //         let name = res.form_names.length?res.form_names[0].name:res.form_name
+    //         let onlyChangePic = res.pokemon.url.split('/')[6]*1 < 10000
+    //         let species = res.pokemon.url.split('/')[6]*1
+
+    //         let poke = {
+    //             'name': name,
+    //             'species':species,
+    //             'onlyChangePic':onlyChangePic,
+    //         }
+
+    //         Object.assign(pokedata[num - 1], poke)
+
+    //     }).then(() => getdataX(num + 1))
+    // }
+
+
+
+
+
+
+
     pokedata = {}
     var getdataX = (num) => {
         $.ajax({
-            url: 'https://pokeapi.co/api/v2/pokemon-form/' + num,
+            url: 'https://pokeapi.co/api/v2/type/' + num,
             type: "GET",
             success: function (res) {
                 return res
             }
         }).then(res => {
             console.log(res)   
-            pokedata[num - 1] = pokedata[num - 1] ? pokedata[num - 1] : {}
-
-            let name = res.form_names.length?res.form_names[0].name:res.form_name
-            let onlyChangePic = res.pokemon.url.split('/')[6]*1 < 10000
-            let species = res.pokemon.url.split('/')[6]*1
-
-            let poke = {
-                'name': name,
-                'species':species,
-                'onlyChangePic':onlyChangePic,
+            let p={}
+            for(i=0;i<属性对照.length;i++){
+                p[属性对照[i]] = 1
             }
 
-            Object.assign(pokedata[num - 1], poke)
+            res.damage_relations.double_damage_to.map(x=>{
+                let index = x.url.split('/')[6]
+                p[属性对照[index-1]] *= 2 
+            })
 
+            res.damage_relations.half_damage_to.map(x=>{
+                let index = x.url.split('/')[6]
+                p[属性对照[index-1]] *= 1/2
+            })
+
+            res.damage_relations.no_damage_to.map(x=>{
+                let index = x.url.split('/')[6]
+                p[属性对照[index-1]] *= 0
+            })
+
+            pokedata[属性对照[num-1]]=p;
         }).then(() => getdataX(num + 1))
     }
+
+
+
 
     //save .json
     function save() {

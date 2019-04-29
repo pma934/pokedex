@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/model/data/abilitiesList.dart';
 import 'package:pokedex/model/data/evolution-chain.dart';
 import 'package:pokedex/model/data/pokemonList-detail.dart';
+import 'package:pokedex/model/data/typesHit.dart';
 import 'package:pokedex/model/fuction/AttrToColor.dart';
 
 class PokeDetail extends StatelessWidget {
@@ -64,8 +65,7 @@ class DetailCardThree extends StatelessWidget {
     return Column(
       children: <Widget>[
         InkWell(
-          child: Image.asset(
-              'lib/assets/PokePic/${pokemon['图片编号']}$suffix.png',
+          child: Image.asset('lib/assets/PokePic/${pokemon['图片编号']}$suffix.png',
               height: 60),
           onTap: () {
             print(pokemon['中文名']);
@@ -163,6 +163,14 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
 
   double _sliderValue = 50;
 
+  int sum(List<int> list) {
+    int s = 0;
+    for (var i = 0; i < list.length; i++) {
+      s += list[i];
+    }
+    return s;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyCard(
@@ -226,6 +234,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
           ),
           //种族值内容
           RacialValueBox(lv: _sliderValue.toInt(), index: widget.index),
+          Text('总和    ${sum(pokemonList[widget.index]['种族值'])}'),
           Divider(
             //间隔
             color: Colors.white,
@@ -265,6 +274,39 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
 class DetailCardOne extends StatelessWidget {
   final int index;
   DetailCardOne({Key key, this.index}) : super(key: key);
+
+  //得到属性抗性
+  String getTypeDefense(List myTypes, String atkType) {
+    double gtd = 1;
+    for (var myType in myTypes) {
+      if (myType != null) {
+        gtd *= typesHit[atkType][myType];
+      }
+    }
+    if (gtd >= 1) {
+      return gtd.toStringAsFixed(0);
+    } else if (gtd == 0.5) {
+      return '1/2';
+    } else {
+      return '1/4';
+    }
+  }
+
+  List<Widget> getTypeDefenseWidget(type) {
+    if (type == null) {
+      return [
+        MyTextCard(value: ''),
+        MyTextCard(value: ''),
+      ];
+    } else {
+      return [
+        MyTextCard(
+            value: type.length > 2 ? type.substring(0, 2) : type,
+            color: getColorFromType(type)),
+        MyTextCard(value: getTypeDefense(pokemonList[index]['属性'], type)),
+      ];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +437,36 @@ class DetailCardOne extends StatelessWidget {
                     }),
             MyTextCard(value: '${pokemonList[index]['孵化步数']}步'),
           ],
+        ),
+        Divider(
+          //间隔
+          color: Colors.white,
+          height: 5.0,
+        ),
+        Text('属性抗性'),
+        Row(
+          children: ['一般', '格斗', '飞行', '毒', '地面']
+              .map((type) => getTypeDefenseWidget(type))
+              .expand((x) => x)
+              .toList(), //先展开，再组合
+        ),
+        Row(
+          children: ['岩石', '虫', '幽灵', '钢', '火']
+              .map((type) => getTypeDefenseWidget(type))
+              .expand((x) => x)
+              .toList(), //先展开，再组合
+        ),
+        Row(
+          children: ['水', '草', '电', '超能力', '冰']
+              .map((type) => getTypeDefenseWidget(type))
+              .expand((x) => x)
+              .toList(), //先展开，再组合
+        ),
+        Row(
+          children: ['龙', '恶', '妖精',null,null]
+              .map((type) => getTypeDefenseWidget(type))
+              .expand((x) => x)
+              .toList(), //先展开，再组合
         ),
       ]),
     );
@@ -565,18 +637,26 @@ Widget chipImg(double radius, String url) {
 //一个文字居中，可带点击事件，方便控制高度的小卡片/按钮,需要使用在column或者row中
 //默认高度24
 class MyTextCard extends StatelessWidget {
-  MyTextCard({Key key, @required this.value, this.height, this.onTap})
+  MyTextCard(
+      {Key key,
+      @required this.value,
+      this.height,
+      this.onTap,
+      this.color,
+      this.flex})
       : super(key: key);
   final String value;
   final double height;
   final onTap;
+  final Color color;
+  final int flex;
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Stack(
         children: <Widget>[
           Card(
-            color: Colors.blue[200],
+            color: color ?? Colors.blue[200],
             child: Container(
               height: height ?? 24,
               alignment: Alignment(0, 0),
@@ -592,7 +672,7 @@ class MyTextCard extends StatelessWidget {
                 )
         ],
       ),
-      flex: 1,
+      flex: flex ?? 1,
     );
   }
 }
