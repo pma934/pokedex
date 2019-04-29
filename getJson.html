@@ -11,14 +11,15 @@
 </head>
 
 <body>
-    <button onclick="getdata1(1)">获取全国Id、特性、身高、体重、属性、种族值、努力值、英文名、</button>
+    <button onclick="getdata1(10001)">获取全国Id、特性、身高、体重、属性、种族值、努力值、英文名、</button>
     <button onclick="getdata2(1)">获取种族、捕获率、初始亲密度、颜色、蛋组、进化表、世代、性别比、性别差异、形态切换、形式描述、孵化步数、幼年宝可梦、中文名、日文名</button>
     <br>
     <button onclick="getdata3(1)">进化链</button>
     <br>
-    <button onclick="getdataX(1)">获取XXX</button>
+    <button onclick="getdataX(10001)">获取XXX</button>
     <br>
     <button onclick="save()">save</button>
+    <input type="file" id="files"  onchange="handleFiles()"/>
 
     <table>
         <thead>
@@ -50,7 +51,7 @@
     //'https://pokeapi.co/api/v2/egg-group/' 蛋组
     var 属性对照 = ['一般', '格斗', '飞行', '毒', '地面', '岩石', '虫', '幽灵', '钢', '火', '水', '草', '电', '超能力', '冰', '龙', '恶', '妖精']
     var 蛋组对照 = ['怪兽组', '水一组', '昆虫组', '飞行组', '陆上组', '妖精组', '植物组', '人形组', '水三组', '矿物组', '不定形组', '水二组', '百变怪', '龙组', '未发现组']
-    var pokedata = []
+   // var pokedata = []
 
 
 
@@ -161,6 +162,7 @@
         }).then(() => getdata2(num + 1))
     }
 
+    //进化链相关
     var getdata3 = (num) => {
         $.ajax({
             url: 'https://pokeapi.co/api/v2/evolution-chain/' + num,
@@ -301,27 +303,54 @@
         })
     }
 
+    //other
+    pokedata = {}
     var getdataX = (num) => {
         $.ajax({
-            url: 'https://pokeapi.co/api/v2/evolution-chain/' + num,
+            url: 'https://pokeapi.co/api/v2/pokemon-form/' + num,
             type: "GET",
             success: function (res) {
                 return res
-            },
-            error: function (err) {
-                return err
             }
         }).then(res => {
-            console.log(res)
-        }, err => {
-            console.log(err)
-        }).then(() => { })
+            console.log(res)   
+            pokedata[num - 1] = pokedata[num - 1] ? pokedata[num - 1] : {}
+
+            let name = res.form_names.length?res.form_names[0].name:res.form_name
+            let onlyChangePic = res.pokemon.url.split('/')[6]*1 < 10000
+            let species = res.pokemon.url.split('/')[6]*1
+
+            let poke = {
+                'name': name,
+                'species':species,
+                'onlyChangePic':onlyChangePic,
+            }
+
+            Object.assign(pokedata[num - 1], poke)
+
+        }).then(() => getdataX(num + 1))
     }
 
+    //save .json
     function save() {
         let content = JSON.stringify(pokedata);
         let blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         saveAs(blob, "save.json");
+    }
+
+    //read .json
+    function handleFiles() {
+        var selectedFile = $("#files")[0].files[0];//获取读取的File对象
+        var name = selectedFile.name;//读取选中文件的文件名
+        var size = selectedFile.size;//读取选中文件的大小
+        console.log("文件名:" + name + "大小：" + size);
+        var reader = new FileReader();//这里是核心！！！读取操作就是由它完成的。
+        reader.readAsText(selectedFile);//读取文件的内容
+
+        reader.onload = function () {
+            console.log("读取结果：", this.result);//当读取完成之后会回调这个函数，然后此时文件的内容存储到了result中。直接操作即可。
+            pokedata = JSON.parse(this.result);
+        };
     }
 </script>
 

@@ -47,6 +47,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
     - lib/assets/Pokemon/
     - lib/assets/PokeIcon/
+    - lib/assets/PokePic/
     - lib/assets/bg-1.md.png
     - lib/assets/bg-1.sh.png
 
