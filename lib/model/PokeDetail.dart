@@ -37,7 +37,7 @@ class _PokeDetailState extends State<PokeDetail> {
       //pageSnapping: false,
       //onPageChanged: (nowPage) => debugPrint('Page:$nowPage'),
       controller: _pageController,
-      children: List.generate(pokemonList.length, (int index) {
+      children: List.generate(pokemonTotal, (int index) {
         return PokeItem(index: (index + 1).toString(), jumpPage: jumpPage);
       }),
     );
@@ -62,16 +62,16 @@ class _PokeItemState extends State<PokeItem> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            titlePadding:EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-            shape:BeveledRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             title: Text('形态切换', textAlign: TextAlign.center),
             children: pokemonList[widget.index]['形态表']
                 .asMap()
                 .map<dynamic, Widget>((index, value) => MapEntry(
                       index,
                       SimpleDialogOption(
-                        child: Text('${value['name']}',textAlign: TextAlign.center),
+                        child: Text('${value['name']}',
+                            textAlign: TextAlign.center),
                         onPressed: () {
                           Navigator.pop(context);
                           setState(() {
@@ -115,7 +115,7 @@ class _PokeItemState extends State<PokeItem> {
         padding: const EdgeInsets.all(8.0),
         children: <Widget>[
           DetailCardOne(index: widget.index, formNumber: formNumber),
-          DetailCardTwo(index: widget.index),
+          DetailCardTwo(index: widget.index, formNumber: formNumber),
           DetailCardThree(
             index: widget.index,
             jumpPage: widget.jumpPage,
@@ -229,8 +229,9 @@ class DetailCardThree extends StatelessWidget {
 
 //第二部分卡片、特性、种族值、击败获取的努力值
 class DetailCardTwo extends StatefulWidget {
-  DetailCardTwo({Key key, @required this.index}) : super(key: key);
   final String index;
+  final int formNumber;
+  DetailCardTwo({Key key, @required this.index,@required this.formNumber}) : super(key: key);
   @override
   _DetailCardTwoState createState() => _DetailCardTwoState();
 }
@@ -247,7 +248,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
           );
   }
 
-  double _sliderValue = 50;
+  double _lv = 50;
 
   int sum(List<int> list) {
     int s = 0;
@@ -259,6 +260,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
 
   @override
   Widget build(BuildContext context) {
+    final String _index = pokemonList[widget.index]['形态表'][widget.formNumber]['物种编号']; //形态改变后的下标
     return MyCard(
       color: Colors.blue[100],
       child: Column(
@@ -280,9 +282,9 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
           Row(
             //特性内容
             children: <Widget>[
-              ablityButton(widget.index, 0),
-              ablityButton(widget.index, 1),
-              ablityButton(widget.index, 2),
+              ablityButton(_index, 0),
+              ablityButton(_index, 1),
+              ablityButton(_index, 2),
             ],
           ),
           Divider(
@@ -297,30 +299,30 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
               Expanded(
                 flex: 8,
                 child: Slider(
-                  value: _sliderValue,
+                  value: _lv,
                   min: 1,
                   max: 100,
                   onChanged: (lv) {
                     setState(() {
-                      _sliderValue = lv;
+                      _lv = lv;
                     });
                   },
-                  label: '${_sliderValue.toInt()}',
+                  label: '${_lv.toInt()}',
                   divisions: 99,
                 ),
               ),
               Expanded(
                 flex: 2,
                 child: Text(
-                  '${_sliderValue.toInt()}级',
+                  '${_lv.toInt()}级',
                   textAlign: TextAlign.center,
                 ),
               ),
             ],
           ),
           //种族值内容
-          RacialValueBox(lv: _sliderValue.toInt(), index: widget.index),
-          Text('总和    ${sum(pokemonList[widget.index]['种族值'])}'),
+          RacialValueBox(lv: _lv.toInt(), index: _index),
+          Text('总和    ${sum(pokemonList[_index]['种族值'])}'),
           Divider(
             //间隔
             color: Colors.white,
@@ -357,6 +359,8 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
 }
 
 //第一部分卡片，包括图片、名称、种类、属性、高、重、属性相性
+// pokemonList[index] 指向原始形态的数据
+// pokemonList[_index] 指向切换形态的数据
 class DetailCardOne extends StatelessWidget {
   final String index;
   final int formNumber;
@@ -375,12 +379,14 @@ class DetailCardOne extends StatelessWidget {
       return gtd.toStringAsFixed(0);
     } else if (gtd == 0.5) {
       return '1/2';
-    } else {
+    } else if (gtd == 0.25) {
       return '1/4';
+    } else {
+      return '无效';
     }
   }
 
-  List<Widget> getTypeDefenseWidget(type) {
+  List<Widget> getTypeDefenseWidget(type, index) {
     if (type == null) {
       return [
         MyTextCard(value: ''),
@@ -398,6 +404,7 @@ class DetailCardOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String _index = pokemonList[index]['形态表'][formNumber]['物种编号']; //形态改变后的下标
     return MyCard(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
           Widget>[
@@ -410,10 +417,24 @@ class DetailCardOne extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    '${pokemonList[index]['中文名']}',
-                    style: TextStyle(fontSize: 24),
-                    textAlign: TextAlign.end,
+                  Stack(
+                    children: <Widget>[
+                      Container(
+                        width: double.infinity,
+                        child: Text(
+                          '${pokemonList[index]['中文名']}',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                      ),
+                      Positioned(
+                        top: 5,
+                        right: 5,
+                        child: pokemonList[index]['形态表'].length == 1
+                            ? Container()
+                            : Text(
+                                '${pokemonList[index]['形态表'][formNumber]['name']}'),
+                      )
+                    ],
                   ),
                   Text(
                       '${pokemonList[index]['日文名']} · ${pokemonList[index]['英文名']}'),
@@ -424,26 +445,27 @@ class DetailCardOne extends StatelessWidget {
                         child: Padding(
                           child: RaisedButton(
                             color:
-                                getColorFromType(pokemonList[index]['属性'][0]),
+                                getColorFromType(pokemonList[_index]['属性'][0]),
                             onPressed: () {
-                              print(pokemonList[index]['属性'][0]);
+                              print(pokemonList[_index]['属性'][0]);
                             },
-                            child: Text('${pokemonList[index]['属性'][0]}'),
+                            child: Text('${pokemonList[_index]['属性'][0]}'),
                           ),
                           padding: EdgeInsets.only(right: 2, left: 2),
                         ),
                       ),
                       Expanded(
-                        child: pokemonList[index]['属性'][1] == null
+                        child: pokemonList[_index]['属性'][1] == null
                             ? Container()
                             : Padding(
                                 child: RaisedButton(
                                   color: getColorFromType(
-                                      pokemonList[index]['属性'][1]),
+                                      pokemonList[_index]['属性'][1]),
                                   onPressed: () {
-                                    print(pokemonList[index]['属性'][1]);
+                                    print(pokemonList[_index]['属性'][1]);
                                   },
-                                  child: Text('${pokemonList[index]['属性'][1]}'),
+                                  child:
+                                      Text('${pokemonList[_index]['属性'][1]}'),
                                 ),
                                 padding: EdgeInsets.only(right: 2, left: 2),
                               ),
@@ -452,8 +474,9 @@ class DetailCardOne extends StatelessWidget {
                   ),
                   Row(
                     children: <Widget>[
-                      Expanded(child: Text('体重:${pokemonList[index]['体重']}kg')),
-                      Expanded(child: Text('身高:${pokemonList[index]['身高']}m')),
+                      Expanded(
+                          child: Text('体重:${pokemonList[_index]['体重']}kg')),
+                      Expanded(child: Text('身高:${pokemonList[_index]['身高']}m')),
                     ],
                   ),
                 ],
@@ -534,37 +557,37 @@ class DetailCardOne extends StatelessWidget {
         Text('属性相性'),
         Row(
           children: ['一般', '格斗', '飞行']
-              .map((type) => getTypeDefenseWidget(type))
+              .map((type) => getTypeDefenseWidget(type, _index))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
           children: ['毒', '地面', '岩石']
-              .map((type) => getTypeDefenseWidget(type))
+              .map((type) => getTypeDefenseWidget(type, _index))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
           children: ['虫', '幽灵', '钢']
-              .map((type) => getTypeDefenseWidget(type))
+              .map((type) => getTypeDefenseWidget(type, _index))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
           children: ['火', '水', '草']
-              .map((type) => getTypeDefenseWidget(type))
+              .map((type) => getTypeDefenseWidget(type, _index))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
           children: ['电', '超能力', '冰']
-              .map((type) => getTypeDefenseWidget(type))
+              .map((type) => getTypeDefenseWidget(type, _index))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
         Row(
           children: ['龙', '恶', '妖精']
-              .map((type) => getTypeDefenseWidget(type))
+              .map((type) => getTypeDefenseWidget(type, _index))
               .expand((x) => x)
               .toList(), //先展开，再组合
         ),
@@ -729,7 +752,7 @@ Widget chipImg(double radius, String url) {
     ),
     child: ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: Image.asset(url, height: 128,width: 128),
+      child: Image.asset(url, height: 128, width: 128),
     ),
   );
 }
