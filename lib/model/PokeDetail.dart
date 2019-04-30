@@ -22,11 +22,12 @@ class _PokeDetailState extends State<PokeDetail> {
   }
 
   void jumpPage(String x) {
-    int page = int.parse(x)-1;
+    int page = int.parse(x) - 1;
     //页面跳转
     print('PageView页面跳转');
     setState(() {
-      _pageController.animateToPage(page,duration: Duration(milliseconds: 1), curve: Curves.fastOutSlowIn);
+      _pageController.animateToPage(page,
+          duration: Duration(milliseconds: 1), curve: Curves.fastOutSlowIn);
     });
   }
 
@@ -34,7 +35,7 @@ class _PokeDetailState extends State<PokeDetail> {
   Widget build(BuildContext context) {
     return PageView(
       //pageSnapping: false,
-      onPageChanged: (nowPage) => debugPrint('Page:$nowPage'),
+      //onPageChanged: (nowPage) => debugPrint('Page:$nowPage'),
       controller: _pageController,
       children: List.generate(pokemonList.length, (int index) {
         return PokeItem(index: (index + 1).toString(), jumpPage: jumpPage);
@@ -43,42 +44,81 @@ class _PokeDetailState extends State<PokeDetail> {
   }
 }
 
-class PokeItem extends StatelessWidget {
+class PokeItem extends StatefulWidget {
   PokeItem({Key key, @required this.index, @required this.jumpPage})
       : super(key: key);
   final String index;
   final jumpPage;
 
   @override
+  _PokeItemState createState() => _PokeItemState();
+}
+
+class _PokeItemState extends State<PokeItem> {
+  int formNumber = 0; //形态表序号
+
+  openFormswitchDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            titlePadding:EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+            contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+            shape:BeveledRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            title: Text('形态切换', textAlign: TextAlign.center),
+            children: pokemonList[widget.index]['形态表']
+                .asMap()
+                .map<dynamic, Widget>((index, value) => MapEntry(
+                      index,
+                      SimpleDialogOption(
+                        child: Text('${value['name']}',textAlign: TextAlign.center),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          setState(() {
+                            formNumber = index;
+                          });
+                        },
+                      ),
+                    ))
+                .values
+                .toList(),
+          );
+        });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Container(
-          alignment: Alignment(-0.3, 0),
+          //alignment: Alignment(-0.3, 0),
           child: Text(
-            'NO.${pokemonList[index]['全国编号']}',
+            'NO.${pokemonList[widget.index]['全国编号']}',
             style: TextStyle(fontSize: 20),
           ),
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            tooltip: 'Open shopping cart',
-            onPressed: () {
-              jumpPage(99);
-            },
-          ),
+          pokemonList[widget.index]['形态表'].length == 1
+              ? Container()
+              : FlatButton(
+                  child: Text('形态切换', style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    print('形态切换');
+                    openFormswitchDialog();
+                    //print('${pokemonList[widget.index]['形态表'].asMap()}');
+                  },
+                ),
         ],
       ),
       body: ListView(
         // shrinkWrap: true,
         padding: const EdgeInsets.all(8.0),
         children: <Widget>[
-          DetailCardOne(index: index),
-          DetailCardTwo(index: index),
+          DetailCardOne(index: widget.index, formNumber: formNumber),
+          DetailCardTwo(index: widget.index),
           DetailCardThree(
-            index: index,
-            jumpPage: jumpPage,
+            index: widget.index,
+            jumpPage: widget.jumpPage,
           )
         ],
       ),
@@ -319,7 +359,9 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
 //第一部分卡片，包括图片、名称、种类、属性、高、重、属性相性
 class DetailCardOne extends StatelessWidget {
   final String index;
-  DetailCardOne({Key key, @required this.index}) : super(key: key);
+  final int formNumber;
+  DetailCardOne({Key key, @required this.index, @required this.formNumber})
+      : super(key: key);
 
   //得到属性相性
   String getTypeDefense(List myTypes, String atkType) {
@@ -361,8 +403,8 @@ class DetailCardOne extends StatelessWidget {
           Widget>[
         Row(
           children: <Widget>[
-            chipImg(
-                8.0, 'lib/assets/PokePic/${pokemonList[index]['图片编号']}.png'),
+            chipImg(8.0,
+                'lib/assets/PokePic/${pokemonList[index]['形态表'][formNumber]['图片编号']}.png'),
             Container(width: 10), //10间隔
             Expanded(
               child: Column(
@@ -687,7 +729,7 @@ Widget chipImg(double radius, String url) {
     ),
     child: ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: Image.asset(url, height: 128),
+      child: Image.asset(url, height: 128,width: 128),
     ),
   );
 }
