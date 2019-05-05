@@ -306,83 +306,96 @@
     //     }).then(() => abc(num + 1))
     // }
 
-    function abc(num){
-        $.ajax({
-            url: 'https://pokeapi.co/api/v2/pokemon/' + num,
-            type: "GET",
-            success: function (res) {
-                return res
-            },
-        }).then(res=>{      
-            console.log(res)
-            pokedata[num] = pokedata[num] ? pokedata[num] : {}
+    // function abc(num){
+    //     $.ajax({
+    //         url: 'https://pokeapi.co/api/v2/pokemon/' + num,
+    //         type: "GET",
+    //         success: function (res) {
+    //             return res
+    //         },
+    //     }).then(res=>{      
+    //         console.log(res)
+    //         pokedata[num] = pokedata[num] ? pokedata[num] : {}
 
 
-            let poke ={}
-            for(i=1;i<19;i++){
-                poke[i] = {
-                    'level-up':[],
-                    'machine':[],
-                    'egg':[],
-                    'tutor':[],
-                }
-            }
+    //         let poke ={}
+    //         for(i=1;i<19;i++){
+    //             poke[i] = {
+    //                 'level-up':[],
+    //                 'machine':[],
+    //                 'egg':[],
+    //                 'tutor':[],
+    //             }
+    //         }
 
 
-            let moves = res.moves    
+    //         let moves = res.moves    
 
 
-            for(i in moves){
-                let move = moves[i] 
-                let 英文名  = move.move.name
-                let 技能编号 = move.move.url.split('/')[6]
-                move.version_group_details.map((x)=>{
-                    let 等级 = x.level_learned_at
+    //         for(i in moves){
+    //             let move = moves[i] 
+    //             let 英文名  = move.move.name
+    //             let 技能编号 = move.move.url.split('/')[6]
+    //             move.version_group_details.map((x)=>{
+    //                 let 等级 = x.level_learned_at
 
-                    let 方式 = x.move_learn_method.name
+    //                 let 方式 = x.move_learn_method.name
 
-                    // switch(方式){
-                    //     case 'egg':方式 = '遗传';  break;
-                    //     case 'tutor':方式 = '定点';  break;
-                    //     case 'level-up':方式 = '升级';  break;
-                    //     case 'machine':方式 = '机器';  break;
-                    //     default:break;
-                    // }
-                    //console.log(x.version_group.url)
-                    let 世代 = x.version_group.url.split('/')[6]
+    //                 // switch(方式){
+    //                 //     case 'egg':方式 = '遗传';  break;
+    //                 //     case 'tutor':方式 = '定点';  break;
+    //                 //     case 'level-up':方式 = '升级';  break;
+    //                 //     case 'machine':方式 = '机器';  break;
+    //                 //     default:break;
+    //                 // }
+    //                 //console.log(x.version_group.url)
+    //                 let 世代 = x.version_group.url.split('/')[6]
 
-                    let xxxx = {
-                        'lv':等级,
-                        'name':英文名,
-                        'index':技能编号
-                    }          
+    //                 let xxxx = {
+    //                     'lv':等级,
+    //                     'name':英文名,
+    //                     'index':技能编号
+    //                 }          
 
-                    if(poke[世代][方式] == undefined){
-                        console.warn(xxxx,num,世代)
-                        console.log(poke[世代][方式])
-                        //poke[世代][方式] = []                       
-                        console.log(poke[世代][方式])
-                        方式 = 'tutor'
-                    }
+    //                 if(poke[世代][方式] == undefined){
+    //                     console.warn(xxxx,num,世代)
+    //                     console.log(poke[世代][方式])
+    //                     //poke[世代][方式] = []                       
+    //                     console.log(poke[世代][方式])
+    //                     方式 = 'tutor'
+    //                 }
 
-                    if(方式 == 'level-up'){
-                        poke[世代][方式].push([技能编号,等级])
-                    }else{
-                        poke[世代][方式].push(技能编号)
-                    }
-                    //poke[世代][方式].push(xxxx)
+    //                 if(方式 == 'level-up'){
+    //                     poke[世代][方式].push([技能编号,等级])
+    //                 }else{
+    //                     poke[世代][方式].push(技能编号)
+    //                 }
+    //                 //poke[世代][方式].push(xxxx)
                     
 
-                    return x
+    //                 return x
 
-                })
+    //             })
 
-             }
+    //          }
+            
+    //         for(i in poke){
+    //             poke[i]['level-up'].sort((x,y)=>{
+    //                 if (x[1] < y[1]) {
+    //                     return -1;
+    //                 }
+    //                 if (x[1] > y[1]) {
+    //                     return 1;
+    //                 }
+    //                 return 0;
+    //             })
+    //         }
+            
 
-            Object.assign(pokedata[num], poke)
+    //         Object.assign(pokedata[num], poke)
 
-        }).then(() => abc(num + 1))
-    }
+    //     }).then(() => abc(num + 1))
+    // }
 
     //other
     var getdataX =(num) => {
@@ -430,6 +443,44 @@
     }
 
 
+    cc2 = (c1,c2)=>{
+        res = {}
+        res['level-up'] = c2['level-up']
+        res['machine'] = Array.from(new Set([...c1['machine'],...c2['machine']]))
+        res['egg'] = Array.from(new Set([...c1['egg'],...c2['egg']]))
+        res['tutor'] = Array.from(new Set([...c1['tutor'],...c2['tutor']]))
+        return res;
+    }
+ 
+    cc3 = (c1,c2,c3)=>{
+        res = {}
+        res['level-up'] = c3['level-up']
+        res['machine'] = Array.from(new Set([...c1['machine'],...c2['machine'],...c3['machine']]))
+        res['egg'] = Array.from(new Set([...c1['egg'],...c2['egg'],...c3['egg']]))
+        res['tutor'] = Array.from(new Set([...c1['tutor'],...c2['tutor'],...c3['tutor']]))
+        return res;
+    }
+
+
+
+
+    function ccc(){
+        for(key in pokedata){
+            let data = {}
+            data['gen1'] = cc2(pokedata[key]['1'],pokedata[key]['2'])
+            data['gen2'] = cc2(pokedata[key]['3'],pokedata[key]['4'])
+
+            data['gen3'] = cc3(pokedata[key]['5'],pokedata[key]['6'],pokedata[key]['7'])
+            data['gen4'] = cc3(pokedata[key]['8'],pokedata[key]['9'],pokedata[key]['10'])
+
+            data['gen5'] = cc2(pokedata[key]['11'],pokedata[key]['14'])
+            data['gen6'] = cc2(pokedata[key]['15'],pokedata[key]['16'])
+            data['gen7'] = cc2(pokedata[key]['17'],pokedata[key]['18'])
+            pokedata[key] = data
+        }
+    }
+
+
 
 
 
@@ -469,32 +520,32 @@
     //     }).then(() => getdataX(num + 1))
     // }
 
-    var 类型对照 = ['变化','物理','特殊']
+    // var 类型对照 = ['变化','物理','特殊']
 
-    function refres(){
-        let aaa = pokedata
-        for(akey in aaa){
-            aaa[akey] = {
-                '威力':pokedata[akey]['power'],
-                '命中':pokedata[akey]['accuracy'],
-                'PP':pokedata[akey]['pp'],
-                '先至度':pokedata[akey]['priority'],
-                '属性':属性对照[pokedata[akey].type.url.split('/')[6]-1],
-                '类型':类型对照[pokedata[akey].damage_class.url.split('/')[6]-1],
-                '中文名':pokedata[akey].names[0].name,
-                '日文名':pokedata[akey].names[1].name,
-                '英文名':pokedata[akey].name,
-                '世代':pokedata[akey].generation.name.split('-')[1],
-                '特效率':pokedata[akey].effect_chance,
-                '说明':pokedata[akey].flavor_text_entries[0].flavor_text,
-                '详情':pokedata[akey].effect_entries[0].effect,
-                'id': ('000' + pokedata[akey].id).slice(-3)
-                //'meta':pokedata[akey].meta,
-                //'target':pokedata[akey].target
-            }
-        }
-        pokedata = aaa
-    }
+    // function refres(){
+    //     let aaa = pokedata
+    //     for(akey in aaa){
+    //         aaa[akey] = {
+    //             '威力':pokedata[akey]['power'],
+    //             '命中':pokedata[akey]['accuracy'],
+    //             'PP':pokedata[akey]['pp'],
+    //             '先至度':pokedata[akey]['priority'],
+    //             '属性':属性对照[pokedata[akey].type.url.split('/')[6]-1],
+    //             '类型':类型对照[pokedata[akey].damage_class.url.split('/')[6]-1],
+    //             '中文名':pokedata[akey].names[0].name,
+    //             '日文名':pokedata[akey].names[1].name,
+    //             '英文名':pokedata[akey].name,
+    //             '世代':pokedata[akey].generation.name.split('-')[1],
+    //             '特效率':pokedata[akey].effect_chance,
+    //             '说明':pokedata[akey].flavor_text_entries[0].flavor_text,
+    //             '详情':pokedata[akey].effect_entries[0].effect,
+    //             'id': ('000' + pokedata[akey].id).slice(-3)
+    //             //'meta':pokedata[akey].meta,
+    //             //'target':pokedata[akey].target
+    //         }
+    //     }
+    //     pokedata = aaa
+    // }
 
 
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'data/abilitiesList.dart';
 import 'data/evolution-chain.dart';
+import 'data/movesList.dart';
+import 'data/pokeMoveList.dart';
 import 'data/pokemonList-detail.dart';
 import 'data/typesHit.dart';
 import 'fuction/AttrToColor.dart';
@@ -57,7 +59,7 @@ class PokeItem extends StatefulWidget {
 class _PokeItemState extends State<PokeItem> {
   int formNumber = 0; //形态表序号
 
-  openFormswitchDialog() {
+  openFormSwitchDialog() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -104,7 +106,7 @@ class _PokeItemState extends State<PokeItem> {
                   child: Text('形态切换', style: TextStyle(color: Colors.white)),
                   onPressed: () {
                     print('形态切换');
-                    openFormswitchDialog();
+                    openFormSwitchDialog();
                     //print('${pokemonList[widget.index]['形态表'].asMap()}');
                   },
                 ),
@@ -116,10 +118,187 @@ class _PokeItemState extends State<PokeItem> {
         children: <Widget>[
           DetailCardOne(index: widget.index, formNumber: formNumber),
           DetailCardTwo(index: widget.index, formNumber: formNumber),
-          DetailCardThree(
-            index: widget.index,
-            jumpPage: widget.jumpPage,
-          )
+          DetailCardThree(index: widget.index, jumpPage: widget.jumpPage),
+          DetailCardFour(index: widget.index, formNumber: formNumber)
+        ],
+      ),
+    );
+  }
+}
+
+//第四部分卡片技能表
+class DetailCardFour extends StatefulWidget {
+  DetailCardFour({Key key, @required this.index, @required this.formNumber})
+      : super(key: key);
+  final int formNumber;
+  final String index;
+  @override
+  _DetailCardFourState createState() => _DetailCardFourState();
+}
+
+class _DetailCardFourState extends State<DetailCardFour> {
+  List<String> generationText = [
+    'gen1 -红绿蓝/黄',
+    'gen2 -金银/水晶',
+    'gen3 -红蓝宝石/火红叶绿/绿宝石',
+    'gen4 -珍珠钻石/白金/心金魂银',
+    'gen5 -黑白/黑白2',
+    'gen6 -XY/Ωα',
+    'gen7 -日月/究极日月',
+  ];
+  List<String> generationValue = [
+    'gen1',
+    'gen2',
+    'gen3',
+    'gen4',
+    'gen5',
+    'gen6',
+    'gen7',
+  ];
+  String generation = 'gen7';
+  List<String> learnWayText = ['等级提升', '技能机', '遗传', '教学&其他'];
+  List<String> learnWayValue = ['level-up', 'machine', 'egg', 'tutor'];
+  String learnWay = 'level-up';
+
+  List<Widget> pokemonMoves(x, choice) {
+    String lv;
+    if (choice == 'level-up') {
+      lv = x[1].toString();
+      x = x[0];
+    }
+    return [
+      InkWell(
+        onTap: () {
+          print('${movesList[x]['说明']}');
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text('${movesList[x]['中文名']}'),
+                  ),
+                  Expanded(
+                    child: Text(lv == null ? '' : '$lv级学习'),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  MyTextCard(
+                    value: movesList[x]['属性'],
+                    color: getColorFromType(movesList[x]['属性']),
+                  ),
+                  MyTextCard(
+                    value: movesList[x]['类型'],
+                    color: Colors.grey[400],
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Text('威力'),
+                        Text('${movesList[x]['威力']}'),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Text('命中'),
+                        Text('${movesList[x]['命中']}'),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Text('PP'),
+                        Text('${movesList[x]['PP']}'),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+      Divider(height: 0)
+    ];
+  }
+
+  openGenerationSwitchDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              title: Text('形态世代', textAlign: TextAlign.center),
+              children: List.generate(7, (int i) {
+                return SimpleDialogOption(
+                  child: Text(generationText[i], textAlign: TextAlign.center),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      generation = generationValue[i];
+                    });
+                  },
+                );
+              }));
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final String _index =
+        pokemonList[widget.index]['形态表'][widget.formNumber]['物种编号']; //形态改变后的下标
+    List _mlist = pokeMoveList[_index][generation][learnWay];
+    return MyCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(children: <Widget>[
+            Text('技能表'),
+            Container(width: 30),
+            MyTextCard(
+              value: generation,
+              onTap: () {
+                print('切换世代');
+                openGenerationSwitchDialog();
+              },
+            ),
+          ]),
+          Divider(
+            color: Colors.white,
+            height: 15.0,
+          ),
+          Row(
+            children: List.generate(4, (int i) {
+              return MyTextCard(
+                value: '${learnWayText[i]}',
+                color: learnWay == learnWayValue[i]
+                    ? Colors.blue[200]
+                    : Colors.grey[200],
+                onTap: () {
+                  setState(() {
+                    learnWay = learnWayValue[i];
+                  });
+                },
+              );
+            }),
+          ),
+          Divider(
+            color: Colors.white,
+            height: 15.0,
+          ),
+          Column(
+              children: _mlist
+                  .map((x) => pokemonMoves(x, learnWay))
+                  .expand((x) => x)
+                  .toList())
         ],
       ),
     );
@@ -231,7 +410,8 @@ class DetailCardThree extends StatelessWidget {
 class DetailCardTwo extends StatefulWidget {
   final String index;
   final int formNumber;
-  DetailCardTwo({Key key, @required this.index,@required this.formNumber}) : super(key: key);
+  DetailCardTwo({Key key, @required this.index, @required this.formNumber})
+      : super(key: key);
   @override
   _DetailCardTwoState createState() => _DetailCardTwoState();
 }
@@ -258,11 +438,12 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
     return s;
   }
 
+
   @override
   Widget build(BuildContext context) {
-    final String _index = pokemonList[widget.index]['形态表'][widget.formNumber]['物种编号']; //形态改变后的下标
+    final String _index =
+        pokemonList[widget.index]['形态表'][widget.formNumber]['物种编号']; //形态改变后的下标
     return MyCard(
-      color: Colors.blue[100],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -404,7 +585,8 @@ class DetailCardOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String _index = pokemonList[index]['形态表'][formNumber]['物种编号']; //形态改变后的下标
+    final String _index =
+        pokemonList[index]['形态表'][formNumber]['物种编号']; //形态改变后的下标
     return MyCard(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
           Widget>[
