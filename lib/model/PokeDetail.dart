@@ -6,6 +6,7 @@ import 'data/pokeMoveList.dart';
 import 'data/pokemonList-detail.dart';
 import 'data/typesHit.dart';
 import 'fuction/AttrToColor.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class PokeDetail extends StatefulWidget {
   PokeDetail({Key key, @required this.initialPage}) : super(key: key);
@@ -112,15 +113,18 @@ class _PokeItemState extends State<PokeItem> {
                 ),
         ],
       ),
-      body: ListView(
-        // shrinkWrap: true,
-        padding: const EdgeInsets.all(8.0),
-        children: <Widget>[
-          DetailCardOne(index: widget.index, formNumber: formNumber),
-          DetailCardTwo(index: widget.index, formNumber: formNumber),
-          DetailCardThree(index: widget.index, jumpPage: widget.jumpPage),
-          DetailCardFour(index: widget.index, formNumber: formNumber)
-        ],
+      body: ScopedModel(
+        model: PokeDetailModel(),
+        child: ListView(
+          // shrinkWrap: true,
+          padding: const EdgeInsets.all(8.0),
+          children: <Widget>[
+            DetailCardOne(index: widget.index, formNumber: formNumber),
+            DetailCardTwo(index: widget.index, formNumber: formNumber),
+            DetailCardThree(index: widget.index, jumpPage: widget.jumpPage),
+            DetailCardFour(index: widget.index, formNumber: formNumber)
+          ],
+        ),
       ),
     );
   }
@@ -155,10 +159,10 @@ class _DetailCardFourState extends State<DetailCardFour> {
     'gen6',
     'gen7',
   ];
-  String generation = 'gen7';
+  //String generation = 'gen7';
   List<String> learnWayText = ['等级提升', '技能机', '遗传', '教学&其他'];
   List<String> learnWayValue = ['level-up', 'machine', 'egg', 'tutor'];
-  String learnWay = 'level-up';
+  //String learnWay = 'level-up';
 
   List<Widget> pokemonMoves(x, choice) {
     String lv;
@@ -229,7 +233,7 @@ class _DetailCardFourState extends State<DetailCardFour> {
     ];
   }
 
-  openGenerationSwitchDialog() {
+  openGenerationSwitchDialog(model) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -242,65 +246,73 @@ class _DetailCardFourState extends State<DetailCardFour> {
                   child: Text(generationText[i], textAlign: TextAlign.center),
                   onPressed: () {
                     Navigator.pop(context);
-                    setState(() {
-                      generation = generationValue[i];
-                    });
+                    // setState(() {
+                    //   generation = generationValue[i];
+                    // });
+                    model.setGeneration(generationValue[i]);
                   },
                 );
               }));
         });
   }
 
+  List mlist(_index,generation,learnWay){
+    return pokeMoveList[_index][generation][learnWay];
+  }
+
   @override
   Widget build(BuildContext context) {
     final String _index =
         pokemonList[widget.index]['形态表'][widget.formNumber]['物种编号']; //形态改变后的下标
-    List _mlist = pokeMoveList[_index][generation][learnWay];
-    return MyCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(children: <Widget>[
-            Text('技能表'),
-            Container(width: 30),
-            MyTextCard(
-              value: generation,
-              onTap: () {
-                print('切换世代');
-                openGenerationSwitchDialog();
-              },
+    //List _mlist = pokeMoveList[_index][generation][learnWay];
+    return ScopedModelDescendant<PokeDetailModel>(
+      builder: (context, _, model) => MyCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(children: <Widget>[
+                  Text('技能表'),
+                  Container(width: 30),
+                  MyTextCard(
+                    value: model.generation,
+                    onTap: () {
+                      print('切换世代');
+                      openGenerationSwitchDialog(model);
+                    },
+                  ),
+                ]),
+                Divider(
+                  color: Colors.white,
+                  height: 15.0,
+                ),
+                Row(
+                  children: List.generate(4, (int i) {
+                    return MyTextCard(
+                      value: '${learnWayText[i]}',
+                      color: model.learnWay == learnWayValue[i]
+                          ? Colors.blue[200]
+                          : Colors.grey[200],
+                      onTap: () {
+                        // setState(() {
+                        //   learnWay = learnWayValue[i];
+                        // });
+                        model.setLearnWay(learnWayValue[i]);
+                      },
+                    );
+                  }),
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 15.0,
+                ),
+                Column(
+                    children: mlist(_index,model.generation,model.learnWay)
+                        .map((x) => pokemonMoves(x, model.learnWay))
+                        .expand((x) => x)
+                        .toList())
+              ],
             ),
-          ]),
-          Divider(
-            color: Colors.white,
-            height: 15.0,
           ),
-          Row(
-            children: List.generate(4, (int i) {
-              return MyTextCard(
-                value: '${learnWayText[i]}',
-                color: learnWay == learnWayValue[i]
-                    ? Colors.blue[200]
-                    : Colors.grey[200],
-                onTap: () {
-                  setState(() {
-                    learnWay = learnWayValue[i];
-                  });
-                },
-              );
-            }),
-          ),
-          Divider(
-            color: Colors.white,
-            height: 15.0,
-          ),
-          Column(
-              children: _mlist
-                  .map((x) => pokemonMoves(x, learnWay))
-                  .expand((x) => x)
-                  .toList())
-        ],
-      ),
     );
   }
 }
@@ -428,7 +440,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
           );
   }
 
-  double _lv = 50;
+  //double _lv = 50;
 
   int sum(List<int> list) {
     int s = 0;
@@ -438,103 +450,108 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
     return s;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final String _index =
         pokemonList[widget.index]['形态表'][widget.formNumber]['物种编号']; //形态改变后的下标
-    return MyCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            //特性标题
-            children: <Widget>[
-              Expanded(
-                child: Text('普通特性'),
-                flex: 2,
-              ),
-              Expanded(
-                child: Text('梦特性'),
-                flex: 1,
-              )
-            ],
-          ),
-          Row(
-            //特性内容
-            children: <Widget>[
-              ablityButton(_index, 0),
-              ablityButton(_index, 1),
-              ablityButton(_index, 2),
-            ],
-          ),
-          Divider(
-            //间隔
-            color: Colors.white,
-            height: 15.0,
-          ),
-          Row(
-            //种族值标题
-            children: <Widget>[
-              Text('种族值'),
-              Expanded(
-                flex: 8,
-                child: Slider(
-                  value: _lv,
-                  min: 1,
-                  max: 100,
-                  onChanged: (lv) {
-                    setState(() {
-                      _lv = lv;
-                    });
-                  },
-                  label: '${_lv.toInt()}',
-                  divisions: 99,
+    return ScopedModelDescendant<PokeDetailModel>(
+      builder: (context, _, model) => MyCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  //特性标题
+                  children: <Widget>[
+                    Expanded(
+                      child: Text('普通特性'),
+                      flex: 2,
+                    ),
+                    Expanded(
+                      child: Text('梦特性'),
+                      flex: 1,
+                    )
+                  ],
                 ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  '${_lv.toInt()}级',
-                  textAlign: TextAlign.center,
+                Row(
+                  //特性内容
+                  children: <Widget>[
+                    ablityButton(_index, 0),
+                    ablityButton(_index, 1),
+                    ablityButton(_index, 2),
+                  ],
                 ),
-              ),
-            ],
+                Divider(
+                  //间隔
+                  color: Colors.white,
+                  height: 15.0,
+                ),
+                Row(
+                  //种族值标题
+                  children: <Widget>[
+                    Text('种族值'),
+                    Expanded(
+                      flex: 8,
+                      child: Slider(
+                        value: model.lv,
+                        min: 1,
+                        max: 100,
+                        onChanged: (lv) {
+                          model.setLv(lv);
+                        },
+                        label: '${model.lv.toInt()}',
+                        divisions: 99,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        '${model.lv.toInt()}级',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+                //种族值内容
+                RacialValueBox(lv: model.lv.toInt(), index: _index),
+                Text('总和    ${sum(pokemonList[_index]['种族值'])}'),
+                Divider(
+                  //间隔
+                  color: Colors.white,
+                  height: 15.0,
+                ),
+                Text('努力值'),
+                Row(
+                  //特性标题
+                  children: <Widget>[
+                    Text('HP'),
+                    MyTextCard(
+                        value: '${pokemonList[widget.index]['努力值'][5]}',
+                        height: 16),
+                    Text('物攻'),
+                    MyTextCard(
+                        value: '${pokemonList[widget.index]['努力值'][4]}',
+                        height: 16),
+                    Text('物防'),
+                    MyTextCard(
+                        value: '${pokemonList[widget.index]['努力值'][3]}',
+                        height: 16),
+                    Text('特功'),
+                    MyTextCard(
+                        value: '${pokemonList[widget.index]['努力值'][2]}',
+                        height: 16),
+                    Text('特防'),
+                    MyTextCard(
+                        value: '${pokemonList[widget.index]['努力值'][1]}',
+                        height: 16),
+                    Text('速度'),
+                    MyTextCard(
+                        value: '${pokemonList[widget.index]['努力值'][0]}',
+                        height: 16),
+                  ],
+                ),
+              ],
+            ),
           ),
-          //种族值内容
-          RacialValueBox(lv: _lv.toInt(), index: _index),
-          Text('总和    ${sum(pokemonList[_index]['种族值'])}'),
-          Divider(
-            //间隔
-            color: Colors.white,
-            height: 15.0,
-          ),
-          Text('努力值'),
-          Row(
-            //特性标题
-            children: <Widget>[
-              Text('HP'),
-              MyTextCard(
-                  value: '${pokemonList[widget.index]['努力值'][5]}', height: 16),
-              Text('物攻'),
-              MyTextCard(
-                  value: '${pokemonList[widget.index]['努力值'][4]}', height: 16),
-              Text('物防'),
-              MyTextCard(
-                  value: '${pokemonList[widget.index]['努力值'][3]}', height: 16),
-              Text('特功'),
-              MyTextCard(
-                  value: '${pokemonList[widget.index]['努力值'][2]}', height: 16),
-              Text('特防'),
-              MyTextCard(
-                  value: '${pokemonList[widget.index]['努力值'][1]}', height: 16),
-              Text('速度'),
-              MyTextCard(
-                  value: '${pokemonList[widget.index]['努力值'][0]}', height: 16),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -979,5 +996,31 @@ class MyTextCard extends StatelessWidget {
       ),
       flex: flex ?? 1,
     );
+  }
+}
+
+//状态管理
+class PokeDetailModel extends Model {
+  double _lv = 50;
+  String _generation = 'gen7';
+  String _learnWay = 'level-up';
+
+  double get lv => _lv;
+  String get generation => _generation;
+  String get learnWay => _learnWay;
+
+  void setLv(x) {
+    _lv = x;
+    notifyListeners();
+  }
+
+  void setGeneration(x) {
+    _generation = x;
+    notifyListeners();
+  }
+
+  void setLearnWay(x) {
+    _learnWay = x;
+    notifyListeners();
   }
 }
