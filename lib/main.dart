@@ -17,7 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Pokedex'),
+      //home: HomePage(title: 'Pokedex'),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(title: 'Pokedex'),
+      },
     );
   }
 }

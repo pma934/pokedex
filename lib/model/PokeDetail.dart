@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'SkillDetail.dart';
 import 'data/abilitiesList.dart';
 import 'data/evolution-chain.dart';
 import 'data/movesList.dart';
@@ -7,6 +8,8 @@ import 'data/pokemonList-detail.dart';
 import 'data/typesHit.dart';
 import 'fuction/AttrToColor.dart';
 import 'package:scoped_model/scoped_model.dart';
+
+import 'myDialog.dart';
 
 class PokeDetail extends StatefulWidget {
   PokeDetail({Key key, @required this.initialPage}) : super(key: key);
@@ -27,7 +30,6 @@ class _PokeDetailState extends State<PokeDetail> {
   void jumpPage(String x) {
     int page = int.parse(x) - 1;
     //页面跳转
-    print('PageView页面跳转');
     setState(() {
       _pageController.animateToPage(page,
           duration: Duration(milliseconds: 1), curve: Curves.fastOutSlowIn);
@@ -106,9 +108,7 @@ class _PokeItemState extends State<PokeItem> {
               : FlatButton(
                   child: Text('形态切换', style: TextStyle(color: Colors.white)),
                   onPressed: () {
-                    print('形态切换');
                     openFormSwitchDialog();
-                    //print('${pokemonList[widget.index]['形态表'].asMap()}');
                   },
                 ),
         ],
@@ -173,7 +173,11 @@ class _DetailCardFourState extends State<DetailCardFour> {
     return [
       InkWell(
         onTap: () {
-          print('${movesList[x]['说明']}');
+          int moveIndex = int.parse(x) - 1;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) => SkillDetail(initialPage: moveIndex)),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -256,7 +260,7 @@ class _DetailCardFourState extends State<DetailCardFour> {
         });
   }
 
-  List mlist(_index,generation,learnWay){
+  List mlist(_index, generation, learnWay) {
     return pokeMoveList[_index][generation][learnWay];
   }
 
@@ -276,7 +280,6 @@ class _DetailCardFourState extends State<DetailCardFour> {
                   MyTextCard(
                     value: model.generation,
                     onTap: () {
-                      print('切换世代');
                       openGenerationSwitchDialog(model);
                     },
                   ),
@@ -306,7 +309,7 @@ class _DetailCardFourState extends State<DetailCardFour> {
                   height: 15.0,
                 ),
                 Column(
-                    children: mlist(_index,model.generation,model.learnWay)
+                    children: mlist(_index, model.generation, model.learnWay)
                         .map((x) => pokemonMoves(x, model.learnWay))
                         .expand((x) => x)
                         .toList())
@@ -342,8 +345,6 @@ class DetailCardThree extends StatelessWidget {
           ),
           onTap: () {
             if (index != pokemon['图片编号']) {
-              print(index);
-              print(pokemon['图片编号']);
               jumpPage(pokemon['图片编号']);
             }
           },
@@ -434,7 +435,21 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
         ? MyTextCard(value: '')
         : MyTextCard(
             onTap: () {
-              print(abilitiesList[pokemonList[index]['特性'][n] - 1]['简介']);
+              //print(abilitiesList[pokemonList[index]['特性'][n] - 1]['简介']);
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return MyDialog(
+                      title: abilitiesList[pokemonList[index]['特性'][n] - 1]
+                          ['中文名称'],
+                      text1: abilitiesList[pokemonList[index]['特性'][n] - 1]
+                          ['简介'],
+                      text2: abilitiesList[pokemonList[index]['特性'][n] - 1]
+                          ['效果'],
+                      tapText: '具有此特性的宝可梦>',
+                    );
+                  });
+              //Navigator.of(context).popUntil( ModalRoute.withName('/'));
             },
             value: abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称'],
           );
@@ -997,6 +1012,15 @@ class MyTextCard extends StatelessWidget {
       flex: flex ?? 1,
     );
   }
+}
+
+//自定义弹出框
+showMyDialog(context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MyDialog();
+      });
 }
 
 //状态管理
