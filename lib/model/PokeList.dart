@@ -1,8 +1,8 @@
 //精灵列表
 import 'package:flutter/material.dart';
-import 'package:pokedex/model/PokeDetail.dart';
-import 'package:pokedex/model/data/pokemonList-simple.dart';
-import 'package:pokedex/model/fuction/AttrToColor.dart';
+import 'PokeDetail.dart';
+import 'data/pokemonList-simple.dart';
+import 'fuction/AttrToColor.dart';
 
 class PokeList extends StatelessWidget {
   @override

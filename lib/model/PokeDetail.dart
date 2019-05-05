@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/model/data/abilitiesList.dart';
-import 'package:pokedex/model/data/evolution-chain.dart';
-import 'package:pokedex/model/data/pokemonList-detail.dart';
-import 'package:pokedex/model/data/typesHit.dart';
-import 'package:pokedex/model/fuction/AttrToColor.dart';
+import 'data/abilitiesList.dart';
+import 'data/evolution-chain.dart';
+import 'data/pokemonList-detail.dart';
+import 'data/typesHit.dart';
+import 'fuction/AttrToColor.dart';
 
 class PokeDetail extends StatefulWidget {
   PokeDetail({Key key, @required this.initialPage}) : super(key: key);

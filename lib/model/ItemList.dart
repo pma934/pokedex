@@ -1,7 +1,7 @@
 //道具列表
 import 'package:flutter/material.dart';
-import 'package:pokedex/model/data/evolution-chain.dart';
-import 'package:pokedex/model/data/pokemonList-simple.dart';
+import 'data/evolution-chain.dart';
+import 'data/pokemonList-simple.dart';
 
 class ItemList extends StatefulWidget {
   @override

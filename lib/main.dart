@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/model/ItemList.dart';
-import 'package:pokedex/model/PokeList.dart';
-import 'package:pokedex/model/SkillList.dart';
+import 'model/ItemList.dart';
+import 'model/PokeList.dart';
+import 'model/SkillList.dart';
 // import 'package:vibrate/vibrate.dart';
 
 void main() {
