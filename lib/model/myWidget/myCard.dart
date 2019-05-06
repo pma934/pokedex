@@ -30,7 +30,8 @@ class MyCard extends StatelessWidget {
 
 class MyTextBox extends StatelessWidget {
   final Widget child;
-  MyTextBox({Key key,@required this.child}):super(key:key);
+  final Color color;
+  MyTextBox({Key key,@required this.child,this.color}):super(key:key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,7 +39,7 @@ class MyTextBox extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: color??Colors.transparent,
           border: new Border.all(color:Colors.grey, width: 0.5), 
         ),
         constraints:BoxConstraints(
