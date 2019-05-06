@@ -81,7 +81,7 @@ class _PokeListState extends State<PokeList> {
             return SimpleDialog(
               shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(32))),
-              contentPadding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+              contentPadding: EdgeInsets.all(16),
               title: Text('精灵筛选',
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 24)),
               children: <Widget>[
@@ -372,7 +372,7 @@ class PokemonCard extends StatelessWidget {
                     splashColor: Colors.white.withOpacity(0.3), // 水墨蔓延
                     highlightColor: Colors.white.withOpacity(0.1), //点击填充
                     onTap: () {
-                      print('${pokemonList[index]['中文名']}');
+                      //print('${pokemonList[index]['中文名']}');
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) =>

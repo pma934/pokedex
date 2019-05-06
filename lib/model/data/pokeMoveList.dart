@@ -216148,6 +216148,24 @@ Map<String, dynamic> pokeMoveList = {
       "tutor": []
     }
   },
+  "808": {
+    "gen1": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen2": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen3": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen4": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen5": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen6": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen7": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+  },
+  "809": {
+    "gen1": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen2": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen3": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen4": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen5": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen6": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+    "gen7": {"level-up": [], "machine": [], "egg": [], "tutor": []},
+  },
   "10001": {
     "gen1": {"level-up": [], "machine": [], "egg": [], "tutor": []},
     "gen2": {"level-up": [], "machine": [], "egg": [], "tutor": []},

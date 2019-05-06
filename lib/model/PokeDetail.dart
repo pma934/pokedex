@@ -10,7 +10,6 @@ import 'fuction/AttrToColor.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'myWidget/myCard.dart';
-import 'myWidget/myDialog.dart';
 import 'myWidget/myTextCard.dart';
 
 class PokeDetail extends StatefulWidget {
@@ -440,20 +439,19 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return MyDialog(
-                      title: abilitiesList[pokemonList[index]['特性'][n] - 1]
-                          ['中文名称'],
-                      text1: abilitiesList[pokemonList[index]['特性'][n] - 1]
-                          ['简介'],
-                      text2: abilitiesList[pokemonList[index]['特性'][n] - 1]
-                          ['效果'],
-                      tapText: '具有此特性的宝可梦>',
-                      onTap: () {
-                        print('具有此特性的宝可梦>');
-                      },
+                    return SimpleDialog(
+                      title: Text(abilitiesList[pokemonList[index]['特性'][n] - 1]
+                          ['中文名称']),
+                      contentPadding: EdgeInsets.all(16),
+                      children: <Widget>[
+                        Text(abilitiesList[pokemonList[index]['特性'][n] - 1]
+                            ['简介']),
+                        Divider(height: 10),
+                        Text(abilitiesList[pokemonList[index]['特性'][n] - 1]
+                            ['效果'])
+                      ],
                     );
                   });
-              //Navigator.of(context).popUntil( ModalRoute.withName('/'));
             },
             value: abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称'],
           );
@@ -680,7 +678,7 @@ class DetailCardOne extends StatelessWidget {
                             color:
                                 getColorFromType(pokemonList[_index]['属性'][0]),
                             onPressed: () {
-                              print(pokemonList[_index]['属性'][0]);
+                              // print(pokemonList[_index]['属性'][0]);
                             },
                             child: Text('${pokemonList[_index]['属性'][0]}'),
                           ),
@@ -695,7 +693,7 @@ class DetailCardOne extends StatelessWidget {
                                   color: getColorFromType(
                                       pokemonList[_index]['属性'][1]),
                                   onPressed: () {
-                                    print(pokemonList[_index]['属性'][1]);
+                                    // print(pokemonList[_index]['属性'][1]);
                                   },
                                   child:
                                       Text('${pokemonList[_index]['属性'][1]}'),
@@ -768,7 +766,7 @@ class DetailCardOne extends StatelessWidget {
             MyTextCard(
                 value: '${pokemonList[index]['蛋组'][0]}',
                 onTap: () {
-                  print(pokemonList[index]['蛋组'][0]);
+                  // print(pokemonList[index]['蛋组'][0]);
                 }),
             pokemonList[index]['蛋组'].length == 1
                 ? MyTextCard(
@@ -777,7 +775,7 @@ class DetailCardOne extends StatelessWidget {
                 : MyTextCard(
                     value: '${pokemonList[index]['蛋组'][1]}',
                     onTap: () {
-                      print(pokemonList[index]['蛋组'][1]);
+                      // print(pokemonList[index]['蛋组'][1]);
                     }),
             MyTextCard(value: '${pokemonList[index]['孵化步数']}步'),
           ],
