@@ -27,3 +27,26 @@ class MyCard extends StatelessWidget {
     );
   }
 }
+
+class MyTextBox extends StatelessWidget {
+  final Widget child;
+  MyTextBox({Key key,@required this.child}):super(key:key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: new Border.all(color:Colors.grey, width: 0.5), 
+        ),
+        constraints:BoxConstraints(
+              minWidth: 56,
+              minHeight: 28,
+            ),
+        child: child,
+      ),
+    );
+  }
+}

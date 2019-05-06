@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/model/myWidget/myCard.dart';
 import 'PokeDetail.dart';
-import 'data/pokemonList-simple.dart';
+import 'data/abilitiesList.dart';
+import 'data/pokemonList-detail.dart';
 import 'fuction/AttrToColor.dart';
 
 class PokeList extends StatefulWidget {
@@ -17,7 +18,8 @@ class _PokeListState extends State<PokeList> {
   String poketype2 = '---'; //属性
   String eggGroup1 = '---'; //蛋组
   String eggGroup2 = '---'; //蛋组
-  String pokename;
+  String pokename; //名称/编号
+  String pokeabil; //特性
   List poketypeValue = [
     '---',
     '一般',
@@ -59,13 +61,27 @@ class _PokeListState extends State<PokeList> {
   ];
   bool reverse = false; //逆序
 
+  //重置
+  void reset() {
+    setState(() {
+      generation = '全部';
+      poketype1 = '---';
+      poketype2 = '---';
+      eggGroup1 = '---';
+      eggGroup2 = '---';
+      pokename = null;
+    });
+  }
+
   openPokeListSearch() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, dialogState) {
             return SimpleDialog(
-              contentPadding: EdgeInsets.only(left: 8, right: 8, bottom: 16),
+              shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32))),
+              contentPadding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
               title: Text('精灵筛选',
                   textAlign: TextAlign.center, style: TextStyle(fontSize: 24)),
               children: <Widget>[
@@ -73,7 +89,7 @@ class _PokeListState extends State<PokeList> {
                   children: <Widget>[
                     Text('世代:', style: TextStyle(fontSize: 20)),
                     PopupMenuButton(
-                      child: MyCard(child: Text(generation)),
+                      child: MyTextBox(child: Text(generation)),
                       onSelected: (value) {
                         setState(() {
                           generation = value;
@@ -91,7 +107,7 @@ class _PokeListState extends State<PokeList> {
                   children: <Widget>[
                     Text('属性:', style: TextStyle(fontSize: 20)),
                     PopupMenuButton(
-                      child: MyCard(child: Text(poketype1)),
+                      child: MyTextBox(child: Text(poketype1)),
                       onSelected: (value) {
                         setState(() {
                           poketype1 = value;
@@ -104,7 +120,7 @@ class _PokeListState extends State<PokeList> {
                           }).toList(),
                     ),
                     PopupMenuButton(
-                      child: MyCard(child: Text(poketype2)),
+                      child: MyTextBox(child: Text(poketype2)),
                       onSelected: (value) {
                         setState(() {
                           poketype2 = value;
@@ -122,7 +138,7 @@ class _PokeListState extends State<PokeList> {
                   children: <Widget>[
                     Text('蛋组:', style: TextStyle(fontSize: 20)),
                     PopupMenuButton(
-                      child: MyCard(child: Text(eggGroup1)),
+                      child: MyTextBox(child: Text(eggGroup1)),
                       onSelected: (value) {
                         setState(() {
                           eggGroup1 = value;
@@ -135,7 +151,7 @@ class _PokeListState extends State<PokeList> {
                           }).toList(),
                     ),
                     PopupMenuButton(
-                      child: MyCard(child: Text(eggGroup2)),
+                      child: MyTextBox(child: Text(eggGroup2)),
                       onSelected: (value) {
                         setState(() {
                           eggGroup2 = value;
@@ -149,16 +165,42 @@ class _PokeListState extends State<PokeList> {
                     )
                   ],
                 ),
-                Text('名称:', style: TextStyle(fontSize: 20)),
                 TextField(
                   decoration: InputDecoration(
-                    labelText: '输入精灵名称',
+                    labelText: '输入精灵名称或者编号进行搜索',
                   ),
                   onChanged: (value) {
                     setState(() {
                       pokename = value;
                     });
                   },
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: '输入精灵特性进行搜索',
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      pokeabil = value;
+                    });
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    OutlineButton(
+                        child: Text('重置'),
+                        onPressed: () {
+                          reset();
+                          dialogState(() {});
+                        }),
+                    Container(width: 10),
+                    OutlineButton(
+                        child: Text('确认'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        }),
+                  ],
                 ),
               ],
             );
@@ -168,27 +210,63 @@ class _PokeListState extends State<PokeList> {
 
   List indexfilter() {
     List indexList = [];
-    for (var i = 0; i < pokemonList.length; i++) {
+    for (var j = 0; j < pokemonTotal; j++) {
+      String i = (j + 1).toString();
+      //获取其他形态的内容
+      List nums = [i];
+      for (Map k in pokemonList[i]['形态表']) {
+        if (k['只改图'] == false) {
+          nums.add(k['物种编号']);
+        }
+      }
+      //筛选世代
       if (pokemonList[i]['世代'] != generation && generation != '全部') {
         continue;
       }
-      if (pokemonList[i]['属性'].indexOf(poketype1) == -1 && poketype1 != '---') {
-        continue;
-      }
-      if (pokemonList[i]['属性'].indexOf(poketype2) == -1 && poketype2 != '---') {
-        continue;
-      }
+      //筛选蛋组
       if (pokemonList[i]['蛋组'].indexOf(eggGroup1) == -1 && eggGroup1 != '---') {
         continue;
       }
       if (pokemonList[i]['蛋组'].indexOf(eggGroup2) == -1 && eggGroup2 != '---') {
         continue;
       }
-      if (pokename != null &&
-          !pokemonList[i]['中文名'].contains(pokename) &&
-          !pokemonList[i]['英文名'].contains(pokename)) {
+      //筛选名称/编号
+      String chEnNum = pokemonList[i]['中文名'] +
+          pokemonList[i]['英文名'] +
+          pokemonList[i]['全国编号'];
+      if (pokename != null && !chEnNum.contains(pokename)) {
         continue;
       }
+      //筛选特性
+      String ability = '';
+      for (String num in nums) {
+        for (int k in pokemonList[num]['特性']) {
+          if (k != null) {
+            ability +=
+                abilitiesList[k - 1]['中文名称'] + abilitiesList[k - 1]['英文名称'];
+          }
+        }
+      }
+      if (pokeabil != null && !ability.contains(pokeabil)) {
+        continue;
+      }
+      //筛选属性
+      bool continueFlag = true;
+      for (String num in nums) {
+        if (pokemonList[num]['属性'].indexOf(poketype1) == -1 &&
+            poketype1 != '---') {
+          continue;
+        }
+        if (pokemonList[num]['属性'].indexOf(poketype2) == -1 &&
+            poketype2 != '---') {
+          continue;
+        }
+        continueFlag = false;
+      }
+      if (continueFlag) {
+        continue;
+      }
+
       indexList.add(i);
     }
     if (reverse) {
@@ -199,6 +277,7 @@ class _PokeListState extends State<PokeList> {
 
   @override
   Widget build(BuildContext context) {
+    List indexList = indexfilter();
     return Scaffold(
       appBar: AppBar(title: Text('精灵列表'), actions: <Widget>[
         IconButton(
@@ -212,14 +291,7 @@ class _PokeListState extends State<PokeList> {
         IconButton(
           icon: Icon(Icons.refresh),
           onPressed: () {
-            setState(() {
-              generation = '全部';
-              poketype1 = '---';
-              poketype2 = '---';
-              eggGroup1 = '---';
-              eggGroup2 = '---';
-              pokename = null;
-            });
+            reset();
           },
         ),
         IconButton(
@@ -242,8 +314,8 @@ class _PokeListState extends State<PokeList> {
             crossAxisCount: 3,
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
-            children: List.generate(indexfilter().length, (int index) {
-              return PokemonCard(index: indexfilter()[index]);
+            children: List.generate(indexList.length, (int index) {
+              return PokemonCard(index: indexList[index]);
             }),
           ),
         ),
@@ -254,7 +326,7 @@ class _PokeListState extends State<PokeList> {
 
 class PokemonCard extends StatelessWidget {
   PokemonCard({Key key, @required this.index}) : super(key: key);
-  final int index;
+  final String index;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -304,7 +376,7 @@ class PokemonCard extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) =>
-                                PokeDetail(initialPage: index)),
+                                PokeDetail(initialPage: int.parse(index) - 1)),
                       );
                     },
                   )),
