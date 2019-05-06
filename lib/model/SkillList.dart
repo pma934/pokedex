@@ -45,30 +45,28 @@ class PokemonListTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Card(
-                        color: getColorFromType(movesList[_index]['属性']),
-                        child: Container(
-                          width: 60,
-                          height: 36,
-                          alignment: Alignment(0, 0),
-                          child: Text('${movesList[_index]['属性']}'),
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Card(
+                      color: getColorFromType(movesList[_index]['属性']),
+                      child: Container(
+                        width: 60,
+                        height: 32,
+                        alignment: Alignment(0, 0),
+                        child: Text('${movesList[_index]['属性']}'),
                       ),
-                      Card(
-                        color: Colors.grey[400],
-                        child: Container(
-                          width: 60,
-                          height: 36,
-                          alignment: Alignment(0, 0),
-                          child: Text('${movesList[_index]['类型']}'),
-                        ),
+                    ),
+                    Card(
+                      color: Colors.grey[400],
+                      child: Container(
+                        width: 60,
+                        height: 32,
+                        alignment: Alignment(0, 0),
+                        child: Text('${movesList[_index]['类型']}'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -5,7 +5,8 @@ class MyDialog extends StatelessWidget {
   final String text1;
   final String text2;
   final String tapText;
-  MyDialog({Key key, this.title, this.text1, this.text2, this.tapText})
+  final Function onTap;
+  MyDialog({Key key, this.title, this.text1, this.text2, this.tapText,this.onTap})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,9 @@ class MyDialog extends StatelessWidget {
                 Expanded(
                     child: Container(
                   alignment: Alignment(1, 1),
-                  child: Text(_tapText),
+                  child: InkWell(
+                      onTap: onTap??(){},
+                      child: Text(_tapText)),
                 ))
               ],
             ),

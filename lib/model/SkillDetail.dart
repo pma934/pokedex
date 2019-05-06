@@ -48,7 +48,7 @@ String getTypeDefense(String myTypes, String defType) {
   } else if (gtd == 0.5) {
     return '1/2';
   } else {
-    return '无效';
+    return '0';
   }
 }
 

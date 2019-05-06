@@ -435,7 +435,6 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
         ? MyTextCard(value: '')
         : MyTextCard(
             onTap: () {
-              //print(abilitiesList[pokemonList[index]['特性'][n] - 1]['简介']);
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -447,6 +446,9 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
                       text2: abilitiesList[pokemonList[index]['特性'][n] - 1]
                           ['效果'],
                       tapText: '具有此特性的宝可梦>',
+                      onTap: (){
+                        print('具有此特性的宝可梦>');
+                      },
                     );
                   });
               //Navigator.of(context).popUntil( ModalRoute.withName('/'));
