@@ -12,12 +12,17 @@ class SkillList extends StatefulWidget {
 class _SkillListState extends State<SkillList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: movesList.length,
-        //itemExtent: 50.0, //强制高度为50.0
-        itemBuilder: (BuildContext context, int index) {
-          return PokemonListTile(index: index);
-        });
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('技能列表'),
+      ),
+      body: ListView.builder(
+          itemCount: movesList.length,
+          //itemExtent: 50.0, //强制高度为50.0
+          itemBuilder: (BuildContext context, int index) {
+            return PokemonListTile(index: index);
+          }),
+    );
   }
 }
 

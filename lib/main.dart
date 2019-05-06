@@ -17,10 +17,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      //home: HomePage(title: 'Pokedex'),
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(title: 'Pokedex'),
+        '/': (context) => HomePage(),
       },
     );
   }
@@ -28,8 +27,7 @@ class MyApp extends StatelessWidget {
 
 //主页面
 class HomePage extends StatefulWidget {
-  final String title;
-  HomePage({Key key, @required this.title}) : super(key: key);
+  HomePage({Key key}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -50,15 +48,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Container(
-          alignment: Alignment(0, 0),
-          child: Text(
-            widget.title,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBarDemo(
         selectedIndex: _selectedIndex,

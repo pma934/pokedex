@@ -9,7 +9,9 @@ import 'data/typesHit.dart';
 import 'fuction/AttrToColor.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import 'myDialog.dart';
+import 'myWidget/myCard.dart';
+import 'myWidget/myDialog.dart';
+import 'myWidget/myTextCard.dart';
 
 class PokeDetail extends StatefulWidget {
   PokeDetail({Key key, @required this.initialPage}) : super(key: key);
@@ -446,7 +448,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
                       text2: abilitiesList[pokemonList[index]['特性'][n] - 1]
                           ['效果'],
                       tapText: '具有此特性的宝可梦>',
-                      onTap: (){
+                      onTap: () {
                         print('具有此特性的宝可梦>');
                       },
                     );
@@ -581,6 +583,21 @@ class DetailCardOne extends StatelessWidget {
   final int formNumber;
   DetailCardOne({Key key, @required this.index, @required this.formNumber})
       : super(key: key);
+
+  //带圆角的图片
+  Widget chipImg(double radius, String url) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
+        color: Colors.yellow[100],
+        //image: DecorationImage(image: AssetImage('lib/assets/bg-1.md.png')),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
+        child: Image.asset(url, height: 128, width: 128),
+      ),
+    );
+  }
 
   //得到属性相性
   String getTypeDefense(List myTypes, String atkType) {
@@ -929,101 +946,6 @@ class RacialValueBox extends StatelessWidget {
 ///********** */
 ///基础部件
 ///********** */
-
-//我的卡片部件，快捷的设置高度、圆角、内边距和颜色
-//默认值：高度200,圆角16,颜色 blue,内边距：8
-class MyCard extends StatelessWidget {
-  MyCard(
-      {Key key, this.height, this.radius, this.padding, this.color, this.child})
-      : super(key: key);
-  final double height;
-  final double radius;
-  final double padding;
-  final Widget child;
-  final Color color;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      //height: height ?? 200,
-      child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(radius ?? 8.0)),
-          ),
-          color: color ?? Colors.blue[100],
-          child: Padding(
-            padding: padding ?? EdgeInsets.all(8.0),
-            child: child,
-          )),
-    );
-  }
-}
-
-//带圆角的图片
-Widget chipImg(double radius, String url) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(radius)),
-      color: Colors.yellow[100],
-      //image: DecorationImage(image: AssetImage('lib/assets/bg-1.md.png')),
-    ),
-    child: ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: Image.asset(url, height: 128, width: 128),
-    ),
-  );
-}
-
-//一个文字居中，可带点击事件，方便控制高度的小卡片/按钮,需要使用在column或者row中
-//默认高度24
-class MyTextCard extends StatelessWidget {
-  MyTextCard(
-      {Key key,
-      @required this.value,
-      this.height,
-      this.onTap,
-      this.color,
-      this.flex})
-      : super(key: key);
-  final String value;
-  final double height;
-  final onTap;
-  final Color color;
-  final int flex;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: <Widget>[
-          Card(
-            color: color ?? Colors.blue[200],
-            child: Container(
-              height: height ?? 24,
-              alignment: Alignment(0, 0),
-              child: Text('$value'),
-            ),
-          ),
-          onTap == null
-              ? Container()
-              : Positioned.fill(
-                  child: InkWell(
-                    onTap: onTap,
-                  ),
-                )
-        ],
-      ),
-      flex: flex ?? 1,
-    );
-  }
-}
-
-//自定义弹出框
-showMyDialog(context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return MyDialog();
-      });
-}
 
 //状态管理
 class PokeDetailModel extends Model {
