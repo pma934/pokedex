@@ -35,18 +35,44 @@ class _SkillListState extends State<SkillList> {
     '恶',
     '妖精'
   ];
-  List usetypeValue = ['ALL','物理','特殊','变化'];
+  List usetypeValue = ['ALL', '物理', '特殊', '变化'];
 
-  Color getColor(x){
-    if(x=='ALL'){
+  Color getColor(x) {
+    if (x == 'ALL') {
       return Colors.grey[400];
-    }else{
+    } else {
       return getColorFromType(x);
     }
   }
 
+  void reset() {
+    setState(() {
+      poketype = 'ALL';
+      usetype = 'ALL';
+    });
+  }
+
+  List indexfilter() {
+    List indexList = [];
+    for (var j = 0; j < movesList.length; j++) {
+      String i = (j + 1).toString();
+      if (movesList[i]['属性'] != poketype && poketype != 'ALL') {
+        continue;
+      }
+      if (movesList[i]['类型'] != usetype && usetype != 'ALL') {
+        continue;
+      }
+      indexList.add(i);
+    }
+    if (reverse) {
+      indexList = indexList.reversed.toList();
+    }
+    return indexList;
+  }
+
   @override
   Widget build(BuildContext context) {
+    List indexList = indexfilter();
     return Scaffold(
       appBar: AppBar(title: Text('技能列表'), actions: <Widget>[
         IconButton(
@@ -59,10 +85,15 @@ class _SkillListState extends State<SkillList> {
         ),
         IconButton(
           icon: Icon(Icons.refresh),
-          onPressed: () {},
+          onPressed: () {
+            reset();
+          },
         ),
         PopupMenuButton(
-          child: MyTextBox(child: Text(poketype),color:getColor(poketype)),
+          child: Padding(
+            padding: EdgeInsets.only(top: 4, bottom: 4),
+            child: MyTextBox(child: Text(poketype), color: getColor(poketype)),
+          ),
           onSelected: (value) {
             setState(() {
               poketype = value;
@@ -74,7 +105,10 @@ class _SkillListState extends State<SkillList> {
               }).toList(),
         ),
         PopupMenuButton(
-          child: MyTextBox(child: Text(usetype),color: Colors.grey[400]),
+          child: Padding(
+            padding: EdgeInsets.only(top: 4, bottom: 4),
+            child: MyTextBox(child: Text(usetype), color: Colors.grey[400]),
+          ),
           onSelected: (value) {
             setState(() {
               usetype = value;
@@ -87,21 +121,20 @@ class _SkillListState extends State<SkillList> {
         ),
       ]),
       body: ListView.builder(
-          itemCount: movesList.length,
+          itemCount: indexList.length,
           //itemExtent: 50.0, //强制高度为50.0
           itemBuilder: (BuildContext context, int index) {
-            return PokemonListTile(index: index);
+            return PokemonListTile(index: indexList[index]);
           }),
     );
   }
 }
 
 class PokemonListTile extends StatelessWidget {
-  final int index;
+  final String index;
   PokemonListTile({Key key, @required this.index}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    String _index = (index + 1).toString();
     return Column(
       children: <Widget>[
         InkWell(
@@ -112,10 +145,10 @@ class PokemonListTile extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Text('#${movesList[_index]['id']}',
+                      Text('#${movesList[index]['id']}',
                           style: TextStyle(fontSize: 16)),
                       Container(width: 20),
-                      Text('${movesList[_index]['中文名']}',
+                      Text('${movesList[index]['中文名']}',
                           style: TextStyle(fontSize: 16)),
                     ],
                   ),
@@ -124,12 +157,12 @@ class PokemonListTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Card(
-                      color: getColorFromType(movesList[_index]['属性']),
+                      color: getColorFromType(movesList[index]['属性']),
                       child: Container(
                         width: 60,
                         height: 32,
                         alignment: Alignment(0, 0),
-                        child: Text('${movesList[_index]['属性']}'),
+                        child: Text('${movesList[index]['属性']}'),
                       ),
                     ),
                     Card(
@@ -138,7 +171,7 @@ class PokemonListTile extends StatelessWidget {
                         width: 60,
                         height: 32,
                         alignment: Alignment(0, 0),
-                        child: Text('${movesList[_index]['类型']}'),
+                        child: Text('${movesList[index]['类型']}'),
                       ),
                     ),
                   ],
@@ -150,7 +183,8 @@ class PokemonListTile extends StatelessWidget {
             print(index);
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => SkillDetail(initialPage: index)),
+                  builder: (context) =>
+                      SkillDetail(initialPage: int.parse(index) - 1)),
             );
           },
         ),
