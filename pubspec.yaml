@@ -50,7 +50,7 @@ flutter:
     - lib/assets/PokeIcon/
     - lib/assets/PokePic/
     - lib/assets/bg-1.md.png
-    - lib/assets/bg-1.sh.png
+    - lib/assets/bg-2.md.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -1,0 +1,1 @@
+int pokemonTotal = 809;

@@ -120,12 +120,20 @@ class _SkillListState extends State<SkillList> {
               }).toList(),
         ),
       ]),
-      body: ListView.builder(
-          itemCount: indexList.length,
-          //itemExtent: 50.0, //强制高度为50.0
-          itemBuilder: (BuildContext context, int index) {
-            return PokemonListTile(index: indexList[index]);
-          }),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/assets/bg-2.md.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: ListView.builder(
+            itemCount: indexList.length,
+            //itemExtent: 50.0, //强制高度为50.0
+            itemBuilder: (BuildContext context, int index) {
+              return PokemonListTile(index: indexList[index]);
+            }),
+      ),
     );
   }
 }

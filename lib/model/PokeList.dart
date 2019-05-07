@@ -4,6 +4,7 @@ import 'package:pokedex/model/myWidget/myCard.dart';
 import 'PokeDetail.dart';
 import 'data/abilitiesList.dart';
 import 'data/pokemonList-detail.dart';
+import 'data/pokemonTotal.dart';
 import 'fuction/AttrToColor.dart';
 
 class PokeList extends StatefulWidget {

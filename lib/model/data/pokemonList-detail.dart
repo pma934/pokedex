@@ -1,4 +1,3 @@
-int pokemonTotal = 809;
 Map<String, dynamic> pokemonList = {
   "1": {
     "全国编号": "001",

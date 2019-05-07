@@ -5,6 +5,7 @@ import 'data/evolution-chain.dart';
 import 'data/movesList.dart';
 import 'data/pokeMoveList.dart';
 import 'data/pokemonList-detail.dart';
+import 'data/pokemonTotal.dart';
 import 'data/typesHit.dart';
 import 'fuction/AttrToColor.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -116,15 +117,23 @@ class _PokeItemState extends State<PokeItem> {
       ),
       body: ScopedModel(
         model: PokeDetailModel(),
-        child: ListView(
-          // shrinkWrap: true,
-          padding: const EdgeInsets.all(8.0),
-          children: <Widget>[
-            DetailCardOne(index: widget.index, formNumber: formNumber),
-            DetailCardTwo(index: widget.index, formNumber: formNumber),
-            DetailCardThree(index: widget.index, jumpPage: widget.jumpPage),
-            DetailCardFour(index: widget.index, formNumber: formNumber)
-          ],
+        child: Container(
+          decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/assets/bg-1.md.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+          child: ListView(
+            // shrinkWrap: true,
+            padding: const EdgeInsets.all(8.0),
+            children: <Widget>[
+              DetailCardOne(index: widget.index, formNumber: formNumber),
+              DetailCardTwo(index: widget.index, formNumber: formNumber),
+              DetailCardThree(index: widget.index, jumpPage: widget.jumpPage),
+              DetailCardFour(index: widget.index, formNumber: formNumber)
+            ],
+          ),
         ),
       ),
     );
@@ -440,8 +449,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      title: Text(abilitiesList[pokemonList[index]['特性'][n] - 1]
-                          ['中文名称']),
+                      title: Text('${abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称']}·${abilitiesList[pokemonList[index]['特性'][n] - 1]['英文名称']}'),
                       contentPadding: EdgeInsets.all(16),
                       children: <Widget>[
                         Text(abilitiesList[pokemonList[index]['特性'][n] - 1]
