@@ -59,7 +59,11 @@ class _PokeListState extends State<PokeList> {
     '龙组',
     '未发现组'
   ];
+  int effort = 6;
+  List effortValue = ['速度','特防','特攻','防御','攻击','HP','---'];
+
   bool reverse = false; //逆序
+
 
   //重置
   void reset() {
@@ -69,7 +73,9 @@ class _PokeListState extends State<PokeList> {
       poketype2 = '---';
       eggGroup1 = '---';
       eggGroup2 = '---';
+      effort = 6;
       pokename = null;
+      pokeabil = null;
     });
   }
 
@@ -165,6 +171,25 @@ class _PokeListState extends State<PokeList> {
                     )
                   ],
                 ),
+                Row(
+                  children: <Widget>[
+                    Text('努力值:', style: TextStyle(fontSize: 20)),
+                    PopupMenuButton(
+                      child: MyTextBox(child: Text(effortValue[effort])),
+                      onSelected: (value) {
+                        setState(() {
+                          effort = effortValue.indexOf(value);
+                          print(effort);
+                        });
+                        dialogState(() {});
+                      },
+                      itemBuilder: (BuildContext context) =>
+                          effortValue.map<PopupMenuItem>((x) {
+                            return PopupMenuItem(value: x, child: Text(x));
+                          }).toList(),
+                    ),
+                  ],
+                ),
                 TextField(
                   decoration: InputDecoration(
                     labelText: '输入精灵名称或者编号进行搜索',
@@ -228,6 +253,11 @@ class _PokeListState extends State<PokeList> {
         continue;
       }
       if (pokemonList[i]['蛋组'].indexOf(eggGroup2) == -1 && eggGroup2 != '---') {
+        continue;
+      }
+      List<int> efforts = pokemonList[i]['努力值'];
+      //筛选努力值
+      if (effort != 6 && efforts[effort] != efforts.reduce((x, y) => x + y)) {
         continue;
       }
       //筛选名称/编号
