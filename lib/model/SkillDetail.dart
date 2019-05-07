@@ -40,19 +40,6 @@ class SkillItem extends StatefulWidget {
   _SkillItemState createState() => _SkillItemState();
 }
 
-String getTypeDefense(String myTypes, String defType) {
-  double gtd = 1;
-  gtd *= typesHit[myTypes][defType];
-
-  if (gtd >= 1) {
-    return gtd.toStringAsFixed(0);
-  } else if (gtd == 0.5) {
-    return '1/2';
-  } else {
-    return '0';
-  }
-}
-
 class _SkillItemState extends State<SkillItem> {
   List<Widget> getTypeDefenseWidget(type, index) {
     if (type == null) {
@@ -67,6 +54,19 @@ class _SkillItemState extends State<SkillItem> {
             color: getColorFromType(type)),
         MyTextCard(value: getTypeDefense(movesList[index]['属性'], type)),
       ];
+    }
+  }
+
+  String getTypeDefense(String myTypes, String defType) {
+    double gtd = 1;
+    gtd *= typesHit[myTypes][defType];
+
+    if (gtd >= 1) {
+      return gtd.toStringAsFixed(0);
+    } else if (gtd == 0.5) {
+      return '1/2';
+    } else {
+      return '0';
     }
   }
 
@@ -129,7 +129,8 @@ class _SkillItemState extends State<SkillItem> {
                     Row(
                       children: <Widget>[
                         MyTextCard(
-                          color: getColorFromType(movesList[widget.index]['属性']),
+                          color:
+                              getColorFromType(movesList[widget.index]['属性']),
                           value: '${movesList[widget.index]['属性']}',
                           onTap: () {
                             print('${movesList[widget.index]['属性']}');
@@ -194,43 +195,48 @@ class _SkillItemState extends State<SkillItem> {
                     Text('打击面'),
                     Row(
                       children: ['一般', '格斗', '飞行']
-                          .map((type) => getTypeDefenseWidget(type, widget.index))
+                          .map((type) =>
+                              getTypeDefenseWidget(type, widget.index))
                           .expand((x) => x)
                           .toList(), //先展开，再组合
                     ),
                     Row(
                       children: ['毒', '地面', '岩石']
-                          .map((type) => getTypeDefenseWidget(type, widget.index))
+                          .map((type) =>
+                              getTypeDefenseWidget(type, widget.index))
                           .expand((x) => x)
                           .toList(), //先展开，再组合
                     ),
                     Row(
                       children: ['虫', '幽灵', '钢']
-                          .map((type) => getTypeDefenseWidget(type, widget.index))
+                          .map((type) =>
+                              getTypeDefenseWidget(type, widget.index))
                           .expand((x) => x)
                           .toList(), //先展开，再组合
                     ),
                     Row(
                       children: ['火', '水', '草']
-                          .map((type) => getTypeDefenseWidget(type, widget.index))
+                          .map((type) =>
+                              getTypeDefenseWidget(type, widget.index))
                           .expand((x) => x)
                           .toList(), //先展开，再组合
                     ),
                     Row(
                       children: ['电', '超能力', '冰']
-                          .map((type) => getTypeDefenseWidget(type, widget.index))
+                          .map((type) =>
+                              getTypeDefenseWidget(type, widget.index))
                           .expand((x) => x)
                           .toList(), //先展开，再组合
                     ),
                     Row(
                       children: ['龙', '恶', '妖精']
-                          .map((type) => getTypeDefenseWidget(type, widget.index))
+                          .map((type) =>
+                              getTypeDefenseWidget(type, widget.index))
                           .expand((x) => x)
                           .toList(), //先展开，再组合
                     ),
                     // Divider(height: 5),
                     // Text('可习得精灵'),
-
                   ],
                 ),
               ),
@@ -241,4 +247,3 @@ class _SkillItemState extends State<SkillItem> {
     );
   }
 }
-

@@ -119,11 +119,11 @@ class _PokeItemState extends State<PokeItem> {
         model: PokeDetailModel(),
         child: Container(
           decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/assets/bg-1.md.png'),
-            fit: BoxFit.cover,
+            image: DecorationImage(
+              image: AssetImage('lib/assets/bg-1.md.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
           child: ListView(
             // shrinkWrap: true,
             padding: const EdgeInsets.all(8.0),
@@ -449,7 +449,8 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
                   context: context,
                   builder: (BuildContext context) {
                     return SimpleDialog(
-                      title: Text('${abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称']}·${abilitiesList[pokemonList[index]['特性'][n] - 1]['英文名称']}'),
+                      title: Text(
+                          '${abilitiesList[pokemonList[index]['特性'][n] - 1]['中文名称']}·${abilitiesList[pokemonList[index]['特性'][n] - 1]['英文名称']}'),
                       contentPadding: EdgeInsets.all(16),
                       children: <Widget>[
                         Text(abilitiesList[pokemonList[index]['特性'][n] - 1]
