@@ -432,53 +432,87 @@
         }).then(() => getdataX(num + 1))
     }
 
+    var ccc = ()=>{
+        for(i in pokedata){
+            console.log(i)
+            let 属性1 = []
+            let 属性2 = []
+            pokedata[i].attributes.map((x)=>{
+                属性1.push(x.name)
+                属性2.push(x.url.split('/')[6]*1)
+            })
+
+            let 世代 = []
+            pokedata[i].game_indices.map((x)=>{
+                世代.push(x.generation.url.split('/')[6]*1)
+            })
 
 
-    function uniqueArr(arr1,arr2) {
-        //合并两个数组
-        arr1.push(...arr2)//或者arr1 = [...arr1,...arr2]
-        //去重
-        let arr3 = Array.from(new Set(arr1))//let arr3 = [...new Set(arr1)]
-        console.log(arr3) 
+            let p = {
+                // '属性1':属性1,
+                // '属性2':属性2,
+                '价格':pokedata[i].cost,
+                'id':pokedata[i].id,
+                '类别':pokedata[i].category.name,
+                // '类别2':pokedata[i].category.url.split('/')[6]*1,
+                '效果':pokedata[i].effect_entries[0].effect,
+                '说明':pokedata[i].flavor_text_entries[0].text,
+                '中文名':pokedata[i].names[0].name,
+                '日文名':pokedata[i].names[1].name,
+                '英文名':pokedata[i].name,
+                '图片':pokedata[i].sprites.default?pokedata[i].sprites.default.split('/')[8].slice(0,-4):'',
+                // '世代':世代,
+            };
+
+            pokedata[i] = p
+        } 
     }
 
+    // function uniqueArr(arr1,arr2) {
+    //     //合并两个数组
+    //     arr1.push(...arr2)//或者arr1 = [...arr1,...arr2]
+    //     //去重
+    //     let arr3 = Array.from(new Set(arr1))//let arr3 = [...new Set(arr1)]
+    //     console.log(arr3) 
+    // }
 
-    cc2 = (c1,c2)=>{
-        res = {}
-        res['level-up'] = c2['level-up']
-        res['machine'] = Array.from(new Set([...c1['machine'],...c2['machine']]))
-        res['egg'] = Array.from(new Set([...c1['egg'],...c2['egg']]))
-        res['tutor'] = Array.from(new Set([...c1['tutor'],...c2['tutor']]))
-        return res;
-    }
+
+    // cc2 = (c1,c2)=>{
+    //     res = {}
+    //     res['level-up'] = c2['level-up']
+    //     res['machine'] = Array.from(new Set([...c1['machine'],...c2['machine']]))
+    //     res['egg'] = Array.from(new Set([...c1['egg'],...c2['egg']]))
+    //     res['tutor'] = Array.from(new Set([...c1['tutor'],...c2['tutor']]))
+    //     return res;
+    // }
  
-    cc3 = (c1,c2,c3)=>{
-        res = {}
-        res['level-up'] = c3['level-up']
-        res['machine'] = Array.from(new Set([...c1['machine'],...c2['machine'],...c3['machine']]))
-        res['egg'] = Array.from(new Set([...c1['egg'],...c2['egg'],...c3['egg']]))
-        res['tutor'] = Array.from(new Set([...c1['tutor'],...c2['tutor'],...c3['tutor']]))
-        return res;
-    }
+    // cc3 = (c1,c2,c3)=>{
+    //     res = {}
+    //     res['level-up'] = c3['level-up']
+    //     res['machine'] = Array.from(new Set([...c1['machine'],...c2['machine'],...c3['machine']]))
+    //     res['egg'] = Array.from(new Set([...c1['egg'],...c2['egg'],...c3['egg']]))
+    //     res['tutor'] = Array.from(new Set([...c1['tutor'],...c2['tutor'],...c3['tutor']]))
+    //     return res;
+    // }
 
 
 
 
-    function ccc(){
-        for(key in pokedata){
-            let data = {}
-            data['gen1'] = cc2(pokedata[key]['1'],pokedata[key]['2'])
-            data['gen2'] = cc2(pokedata[key]['3'],pokedata[key]['4'])
+    // function ccc(){
+    //     for(key in pokedata){
+    //         let data = {}
+    //         data['gen1'] = cc2(pokedata[key]['1'],pokedata[key]['2'])
+    //         data['gen2'] = cc2(pokedata[key]['3'],pokedata[key]['4'])
 
-            data['gen3'] = cc3(pokedata[key]['5'],pokedata[key]['6'],pokedata[key]['7'])
-            data['gen4'] = cc3(pokedata[key]['8'],pokedata[key]['9'],pokedata[key]['10'])
+    //         data['gen3'] = cc3(pokedata[key]['5'],pokedata[key]['6'],pokedata[key]['7'])
+    //         data['gen4'] = cc3(pokedata[key]['8'],pokedata[key]['9'],pokedata[key]['10'])
 
-            data['gen5'] = cc2(pokedata[key]['11'],pokedata[key]['14'])
-            data['gen6'] = cc2(pokedata[key]['15'],pokedata[key]['16'])
-            data['gen7'] = cc2(pokedata[key]['17'],pokedata[key]['18'])
-            pokedata[key] = data
-        }
-    }
+    //         data['gen5'] = cc2(pokedata[key]['11'],pokedata[key]['14'])
+    //         data['gen6'] = cc2(pokedata[key]['15'],pokedata[key]['16'])
+    //         data['gen7'] = cc2(pokedata[key]['17'],pokedata[key]['18'])
+    //         pokedata[key] = data
+    //     }
+    // }
 
 
 

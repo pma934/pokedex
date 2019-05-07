@@ -131,16 +131,16 @@ class _SkillListState extends State<SkillList> {
             itemCount: indexList.length,
             //itemExtent: 50.0, //强制高度为50.0
             itemBuilder: (BuildContext context, int index) {
-              return PokemonListTile(index: indexList[index]);
+              return SkillListTile(index: indexList[index]);
             }),
       ),
     );
   }
 }
 
-class PokemonListTile extends StatelessWidget {
+class SkillListTile extends StatelessWidget {
   final String index;
-  PokemonListTile({Key key, @required this.index}) : super(key: key);
+  SkillListTile({Key key, @required this.index}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
