@@ -139,11 +139,14 @@ class _ItemListState extends State<ItemList> {
       ]),
       body: Container(
         decoration: BoxDecoration(
-            // image: DecorationImage(
-            //    image: AssetImage('lib/assets/bg-3.md.png'),
-            //    fit: BoxFit.cover,
-            // ),
-            ),
+          image: DecorationImage(
+              image: AssetImage('lib/assets/bg-3.md.png'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Color.fromRGBO(224, 200, 155, 0.5),
+                BlendMode.srcOver,
+              )),
+        ),
         child: ListView(
           itemExtent: 60.0, //强制高度为50.0
           children: ListTile.divideTiles(
@@ -172,9 +175,7 @@ class ItemListTile extends StatelessWidget {
       onTap: () {
         print(index);
         Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) =>
-                  ItemDetail(pagekey: index)),
+          MaterialPageRoute(builder: (context) => ItemDetail(pagekey: index)),
         );
       },
     );

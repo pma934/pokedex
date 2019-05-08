@@ -87,16 +87,29 @@ class _BottomNavigationBarDemoState extends State<BottomNavigationBarDemo> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: _currentIndex,
-      onTap: _onTapHandler,
-      type: BottomNavigationBarType.fixed,
-      fixedColor: Colors.blueAccent,
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(icon: Icon(Icons.pets), title: Text('精灵')),
-        BottomNavigationBarItem(icon: Icon(Icons.polymer), title: Text('技能')),
-        BottomNavigationBarItem(icon: Icon(Icons.work), title: Text('道具')),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/assets/bg-5.md.png'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Color.fromRGBO(193, 113, 184, 0.8),
+              BlendMode.screen,
+            )
+          ),
+        ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
+        currentIndex: _currentIndex,
+        onTap: _onTapHandler,
+        type: BottomNavigationBarType.fixed,
+        fixedColor: Colors.blueAccent[700],
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.pets), title: Text('精灵')),
+          BottomNavigationBarItem(icon: Icon(Icons.polymer), title: Text('技能')),
+          BottomNavigationBarItem(icon: Icon(Icons.work), title: Text('道具')),
+        ],
+      ),
     );
   }
 }
