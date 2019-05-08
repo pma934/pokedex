@@ -19,8 +19,8 @@ class _PokeListState extends State<PokeList> {
   String poketype2 = '---'; //属性
   String eggGroup1 = '---'; //蛋组
   String eggGroup2 = '---'; //蛋组
-  String pokename; //名称/编号
-  String pokeabil; //特性
+  String pokeName; //名称/编号
+  String pokeAbil; //特性
   List poketypeValue = [
     '---',
     '一般',
@@ -75,8 +75,8 @@ class _PokeListState extends State<PokeList> {
       eggGroup1 = '---';
       eggGroup2 = '---';
       effort = 6;
-      pokename = null;
-      pokeabil = null;
+      pokeName = null;
+      pokeAbil = null;
     });
   }
 
@@ -193,20 +193,22 @@ class _PokeListState extends State<PokeList> {
                 TextField(
                   decoration: InputDecoration(
                     labelText: '输入精灵名称或者编号进行搜索',
+                    hintText: pokeName,
                   ),
                   onChanged: (value) {
                     setState(() {
-                      pokename = value;
+                      pokeName = value;
                     });
                   },
                 ),
                 TextField(
                   decoration: InputDecoration(
                     labelText: '输入精灵特性进行搜索',
+                    hintText: pokeAbil,
                   ),
                   onChanged: (value) {
                     setState(() {
-                      pokeabil = value;
+                      pokeAbil = value;
                     });
                   },
                 ),
@@ -264,7 +266,7 @@ class _PokeListState extends State<PokeList> {
       String chEnNum = pokemonList[i]['中文名'] +
           pokemonList[i]['英文名'] +
           pokemonList[i]['全国编号'];
-      if (pokename != null && !chEnNum.contains(pokename)) {
+      if (pokeName != null && !chEnNum.contains(pokeName)) {
         continue;
       }
       //筛选特性
@@ -277,7 +279,7 @@ class _PokeListState extends State<PokeList> {
           }
         }
       }
-      if (pokeabil != null && !ability.contains(pokeabil)) {
+      if (pokeAbil != null && !ability.contains(pokeAbil)) {
         continue;
       }
       //筛选属性

@@ -13,7 +13,6 @@ class ItemDetail extends StatefulWidget {
 class _ItemDetailState extends State<ItemDetail> {
   @override
   Widget build(BuildContext context) {
-    print(ketToPage[widget.pagekey]);
     return Container(
       child: PageView(
         controller: PageController(
@@ -99,6 +98,7 @@ class ItemItem extends StatelessWidget {
                         height: 5.0,
                       ),
                       Card(
+                        color: Colors.blue[200],
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(

@@ -183,6 +183,7 @@ class _SkillItemState extends State<SkillItem> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text('${movesList[widget.index]['说明']}'),
                             Divider(height: 10),

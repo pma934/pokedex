@@ -36,6 +36,7 @@ class _SkillListState extends State<SkillList> {
     '妖精'
   ];
   List usetypeValue = ['ALL', '物理', '特殊', '变化'];
+  String moveName;
 
   Color getColor(x) {
     if (x == 'ALL') {
@@ -60,6 +61,11 @@ class _SkillListState extends State<SkillList> {
         continue;
       }
       if (movesList[i]['类型'] != usetype && usetype != 'ALL') {
+        continue;
+      }
+      String chEn = movesList[i]['中文名'] +
+          movesList[i]['英文名'];
+      if (moveName != null && !chEn.contains(moveName)) {
         continue;
       }
       indexList.add(i);
@@ -120,19 +126,35 @@ class _SkillListState extends State<SkillList> {
               }).toList(),
         ),
       ]),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/assets/bg-2.md.png'),
-            fit: BoxFit.cover,
+      body: Column(
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+              hintText: '输入技能名称(中、英文)进行搜索',
+            ),
+            onChanged: (value) {
+              setState(() {
+                moveName = value;
+              });
+            },
           ),
-        ),
-        child: ListView.builder(
-            itemCount: indexList.length,
-            //itemExtent: 50.0, //强制高度为50.0
-            itemBuilder: (BuildContext context, int index) {
-              return SkillListTile(index: indexList[index]);
-            }),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('lib/assets/bg-2.md.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: ListView.builder(
+                  itemCount: indexList.length,
+                  //itemExtent: 50.0, //强制高度为50.0
+                  itemBuilder: (BuildContext context, int index) {
+                    return SkillListTile(index: indexList[index]);
+                  }),
+            ),
+          ),
+        ],
       ),
     );
   }

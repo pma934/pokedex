@@ -12,6 +12,7 @@ class ItemList extends StatefulWidget {
 class _ItemListState extends State<ItemList> {
   bool reverse = false;
   List<String> itemfilter = new List();
+  String itemName;
 
   @override
   void initState() {
@@ -42,11 +43,13 @@ class _ItemListState extends State<ItemList> {
     List indexList = [];
 
     itemList.map(
-      (index, value) => MapEntry(
-            index,
+      (i, value) => MapEntry(
+            i,
             (x) {
-              if (itemfilter.contains(value['类别'])) {
-                x.add(index);
+              String chEn = itemList[i]['中文名'] + itemList[i]['英文名'];
+              if ((itemName == null || chEn.contains(itemName)) &&
+                  itemfilter.contains(value['类别'])) {
+                x.add(i);
               }
             }(indexList),
           ),
@@ -137,25 +140,41 @@ class _ItemListState extends State<ItemList> {
           },
         ),
       ]),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('lib/assets/bg-3.md.png'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Color.fromRGBO(224, 200, 155, 0.5),
-                BlendMode.srcOver,
-              )),
-        ),
-        child: ListView(
-          itemExtent: 60.0, //强制高度为50.0
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: indexList.map((index) {
-              return ItemListTile(index: index);
-            }),
-          ).toList(),
-        ),
+      body: Column(
+        children: <Widget>[
+          TextField(
+            decoration: InputDecoration(
+              hintText: '输入道具名称(中、英文)进行搜索',
+            ),
+            onChanged: (value) {
+              setState(() {
+                itemName = value;
+              });
+            },
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('lib/assets/bg-3.md.png'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Color.fromRGBO(224, 200, 155, 0.5),
+                      BlendMode.srcOver,
+                    )),
+              ),
+              child: ListView(
+                itemExtent: 60.0, //强制高度为50.0
+                children: ListTile.divideTiles(
+                  context: context,
+                  tiles: indexList.map((index) {
+                    return ItemListTile(index: index);
+                  }),
+                ).toList(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -173,7 +192,7 @@ class ItemListTile extends StatelessWidget {
       subtitle: Text('${itemList[index]['英文名']}'),
       trailing: Text('${itemList[index]['类别']}'),
       onTap: () {
-        print(index);
+        // print(index);
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => ItemDetail(pagekey: index)),
         );
