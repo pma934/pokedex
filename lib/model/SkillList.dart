@@ -188,7 +188,7 @@ class SkillListTile extends StatelessWidget {
             ),
           ),
           onTap: () {
-            print(index);
+            // print(index);
             Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (context) =>

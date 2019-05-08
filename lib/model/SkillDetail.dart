@@ -133,7 +133,7 @@ class _SkillItemState extends State<SkillItem> {
                               getColorFromType(movesList[widget.index]['属性']),
                           value: '${movesList[widget.index]['属性']}',
                           onTap: () {
-                            print('${movesList[widget.index]['属性']}');
+                            // print('${movesList[widget.index]['属性']}');
                           },
                           height: 36,
                         ),
@@ -141,7 +141,7 @@ class _SkillItemState extends State<SkillItem> {
                           color: Colors.grey[400],
                           value: '${movesList[widget.index]['类型']}',
                           onTap: () {
-                            print('${movesList[widget.index]['类型']}');
+                            // print('${movesList[widget.index]['类型']}');
                           },
                           height: 36,
                         ),

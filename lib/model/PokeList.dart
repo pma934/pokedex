@@ -180,7 +180,6 @@ class _PokeListState extends State<PokeList> {
                       onSelected: (value) {
                         setState(() {
                           effort = effortValue.indexOf(value);
-                          print(effort);
                         });
                         dialogState(() {});
                       },
@@ -250,10 +249,10 @@ class _PokeListState extends State<PokeList> {
         continue;
       }
       //筛选蛋组
-      if (pokemonList[i]['蛋组'].indexOf(eggGroup1) == -1 && eggGroup1 != '---') {
+      if (!pokemonList[i]['蛋组'].contains(eggGroup1) && eggGroup1 != '---') {
         continue;
       }
-      if (pokemonList[i]['蛋组'].indexOf(eggGroup2) == -1 && eggGroup2 != '---') {
+      if (!pokemonList[i]['蛋组'].contains(eggGroup2) && eggGroup2 != '---') {
         continue;
       }
       List<int> efforts = pokemonList[i]['努力值'];
@@ -284,11 +283,11 @@ class _PokeListState extends State<PokeList> {
       //筛选属性
       bool continueFlag = true;
       for (String num in nums) {
-        if (pokemonList[num]['属性'].indexOf(poketype1) == -1 &&
+        if (!pokemonList[num]['属性'].contains(poketype1) &&
             poketype1 != '---') {
           continue;
         }
-        if (pokemonList[num]['属性'].indexOf(poketype2) == -1 &&
+        if (!pokemonList[num]['属性'].contains(poketype2) &&
             poketype2 != '---') {
           continue;
         }
