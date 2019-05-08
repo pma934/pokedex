@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'model/Author.dart';
 import 'model/ItemList.dart';
 import 'model/PokeList.dart';
 import 'model/SkillList.dart';
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions[_selectedIndex],
+      drawer: AuthorDemo(),
       bottomNavigationBar: BottomNavigationBarDemo(
         selectedIndex: _selectedIndex,
         callBack: (index) => onChanged(index),
