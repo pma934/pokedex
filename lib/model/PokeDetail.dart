@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'ItemDetail.dart';
 import 'SkillDetail.dart';
 import 'data/abilitiesList.dart';
 import 'data/evolution-chain.dart';
+import 'data/itemList.dart';
 import 'data/movesList.dart';
 import 'data/pokeMoveList.dart';
 import 'data/pokemonList-detail.dart';
@@ -337,7 +340,45 @@ class DetailCardThree extends StatelessWidget {
   final String index;
   final jumpPage;
 
-  imageButtonAndName(list, suffix) {
+  Widget evolutionNeed(List icon, context) {
+    String index = icon[1].toString();
+    switch (icon[0]) {
+      case '道具':
+        return InkWell(
+          child: Image.asset('lib/assets/ItemPic/${itemList[index]['图片']}.png',
+              height: 60),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => ItemDetail(pagekey: index)),
+            );
+          },
+        );
+      case '精灵':
+        return InkWell(
+          child: Image.asset(
+              'lib/assets/PokePic/${pokemonList[index]['图片编号']}.png',
+              height: 60),
+          onTap: () {
+            jumpPage(pokemonList[index]['图片编号']);
+          },
+        );
+      case '技能':
+        return InkWell(
+          child: Icon(Icons.polymer),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => SkillDetail(initialPage: icon[1] - 1)),
+            );
+          },
+        );
+      default:
+        return Container();
+    }
+  }
+
+  Widget imageButtonAndName(list, suffix) {
     var pokemon = pokemonList[list['species'].toString()];
     return Column(
       children: <Widget>[
@@ -364,7 +405,7 @@ class DetailCardThree extends StatelessWidget {
     );
   }
 
-  createEvolutionChain(beforeEvolution) {
+  Widget createEvolutionChain(beforeEvolution, context) {
     if (beforeEvolution['chain'].length == 0) {
       if (beforeEvolution['id'] != null) {
         return Container(
@@ -383,9 +424,17 @@ class DetailCardThree extends StatelessWidget {
                 imageButtonAndName(beforeEvolution, ''),
                 Expanded(
                     flex: 1,
-                    child: Text(
-                      afterEvolution['details'][0]['str'],
-                      textAlign: TextAlign.center,
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      alignment: WrapAlignment.center,
+                      children: <Widget>[
+                        evolutionNeed(
+                            afterEvolution['details'][0]['icon'], context),
+                        Text(
+                          afterEvolution['details'][0]['str'],
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     )),
                 imageButtonAndName(afterEvolution, ''),
               ]),
@@ -394,14 +443,23 @@ class DetailCardThree extends StatelessWidget {
                       imageButtonAndName(beforeEvolution, ''),
                       Expanded(
                           flex: 1,
-                          child: Text(
-                            afterEvolution['details'][1]['str'],
-                            textAlign: TextAlign.center,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            alignment: WrapAlignment.center,
+                            children: <Widget>[
+                              evolutionNeed(
+                                  afterEvolution['details'][1]['icon'],
+                                  context),
+                              Text(
+                                afterEvolution['details'][1]['str'],
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           )),
                       imageButtonAndName(afterEvolution, '-otherEvolutionWay'),
                     ])
                   : Container(),
-              createEvolutionChain(afterEvolution)
+              createEvolutionChain(afterEvolution, context)
             ],
           );
         },
@@ -423,7 +481,8 @@ class DetailCardThree extends StatelessWidget {
           color: Colors.white,
           height: 15.0,
         ),
-        createEvolutionChain(evolutionChain[pokemonList[index]['进化表'] - 1]),
+        createEvolutionChain(
+            evolutionChain[pokemonList[index]['进化表'] - 1], context),
       ],
     ));
   }
