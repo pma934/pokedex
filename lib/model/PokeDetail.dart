@@ -620,7 +620,7 @@ class _DetailCardTwoState extends State<DetailCardTwo> {
                     MyTextCard(
                         value: '${pokemonList[widget.index]['努力值'][3]}',
                         height: 16),
-                    Text('特功'),
+                    Text('特攻'),
                     MyTextCard(
                         value: '${pokemonList[widget.index]['努力值'][2]}',
                         height: 16),
@@ -660,7 +660,7 @@ class DetailCardOne extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(radius)),
-        child: Image.asset(url, height: 128, width: 128),
+        child: Image.asset(url, height: 128, width: 128,filterQuality: FilterQuality.high),
       ),
     );
   }

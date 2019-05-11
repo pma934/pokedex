@@ -124,7 +124,7 @@ class _ItemListState extends State<ItemList> {
   Widget build(BuildContext context) {
     List indexList = indexfilter();
     return Scaffold(
-      appBar: AppBar(title: Text('技能列表'), actions: <Widget>[
+      appBar: AppBar(title: Text('道具列表'), actions: <Widget>[
         IconButton(
           icon: Icon(reverse ? Icons.arrow_upward : Icons.arrow_downward),
           onPressed: () {
